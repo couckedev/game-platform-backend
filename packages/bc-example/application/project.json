@@ -1,0 +1,16 @@
+{
+  "name": "bc-example-application",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/bc-example/application/src",
+  "projectType": "library",
+  "tags": ["type:application", "scope:example"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "command": "npx tsc -p packages/bc-example/application/tsconfig.lib.json"
+      }
+    }
+  }
+}

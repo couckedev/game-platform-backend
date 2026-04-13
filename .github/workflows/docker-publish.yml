@@ -1,0 +1,107 @@
+name: Build & Publish Docker Images
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      apps:
+        description: 'Apps to publish (JSON array, e.g. ["api-gateway","backoffice"])'
+        required: false
+        type: string
+      app:
+        description: 'Publish a single app (name)'
+        required: false
+        type: string
+      force_all:
+        description: 'Publish ALL apps?'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  detect-affected-apps:
+    name: Detect apps to publish
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.resolve.outputs.apps }}
+      has_apps: ${{ steps.resolve.outputs.has_apps }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Resolve apps
+        id: resolve
+        run: |
+          if [ -n "${{ inputs.apps }}" ]; then
+            APPS='${{ inputs.apps }}'
+          elif [ -n "${{ inputs.app }}" ]; then
+            APPS='["${{ inputs.app }}"]'
+          elif [ "${{ inputs.force_all }}" = "true" ]; then
+            APPS=$(pnpm nx show projects --type=app --json 2>/dev/null || echo "[]")
+          else
+            APPS=$(pnpm nx show projects --affected --base=HEAD~1 --head=HEAD --type=app --json 2>/dev/null || echo "[]")
+          fi
+          echo "apps=$(echo $APPS | jq -c '.')" >> $GITHUB_OUTPUT
+          if [ "$(echo $APPS | jq 'length')" -gt 0 ]; then
+            echo "has_apps=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_apps=false" >> $GITHUB_OUTPUT
+          fi
+
+  build-and-push:
+    name: Build ${{ matrix.app }}
+    needs: detect-affected-apps
+    if: needs.detect-affected-apps.outputs.has_apps == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: ${{ fromJson(needs.detect-affected-apps.outputs.apps) }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./apps/${{ matrix.app }}/package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if image already exists
+        id: check
+        continue-on-error: true
+        run: |
+          docker manifest inspect ghcr.io/${{ github.repository }}/${{ matrix.app }}:${{ steps.version.outputs.version }} > /dev/null 2>&1
+          if [ $? -eq 0 ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: docker/build-push-action@v6
+        if: steps.check.outputs.exists != 'true'
+        with:
+          context: .
+          file: ./apps/${{ matrix.app }}/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/${{ matrix.app }}:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
