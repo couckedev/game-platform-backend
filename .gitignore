@@ -15,6 +15,9 @@ out/
 # Test coverage
 coverage/
 
+# Cucumber reports
+e2e/reports/
+
 # Environment files
 .env
 .env.local

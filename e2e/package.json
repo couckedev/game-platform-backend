@@ -1,0 +1,13 @@
+{
+  "name": "game-platform-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "e2e": "cucumber-js"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "@types/node": "^25.6.0",
+    "ts-node": "^10.9.2"
+  }
+}
