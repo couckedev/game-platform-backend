@@ -1,5 +1,5 @@
 import { Given, When, Then } from '@cucumber/cucumber';
-import { GamePlatformWorld } from '../../support/world';
+import type { GamePlatformWorld } from '../../support/world';
 
 Given<GamePlatformWorld>('que le système est initialisé', async function () {
   // TODO: initialiser le contexte du scénario
