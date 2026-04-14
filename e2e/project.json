@@ -2,13 +2,13 @@
   "name": "game-platform-e2e",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "implicitDependencies": ["bc-example-infrastructure"],
+  "implicitDependencies": ["player-infrastructure", "player-application"],
   "tags": ["type:e2e"],
   "targets": {
     "e2e": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx cucumber-js",
+        "command": "node_modules/.bin/tsx node_modules/@cucumber/cucumber/bin/cucumber.js",
         "cwd": "e2e"
       }
     }

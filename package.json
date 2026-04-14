@@ -1,9 +1,10 @@
 {
-  "name": "monorepo-modulith-template",
+  "name": "game-platform",
   "private": true,
   "scripts": {
     "build": "pnpm nx run-many --target=build",
     "test": "pnpm nx run-many --target=test",
+    "e2e": "pnpm nx run game-platform-e2e:e2e",
     "lint": "pnpm nx run-many --target=lint",
     "changeset": "changeset",
     "version-packages": "changeset version",
