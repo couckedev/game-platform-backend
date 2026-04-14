@@ -1,0 +1,13 @@
+{
+  "name": "player-infrastructure",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@couckedev/ddd-core": "^2.0.0",
+    "player-application": "workspace:*",
+    "player-domain": "workspace:*"
+  },
+  "private": true
+}

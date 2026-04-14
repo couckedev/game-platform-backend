@@ -1,15 +1,11 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "bundler",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
     "target": "ES2022",
     "module": "ESNext",
-    "lib": ["ES2022"],
+    "lib": ["ESNext"],
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -23,14 +19,13 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "baseUrl": ".",
     "paths": {
-      "bc-example-domain": ["packages/bc-example/domain/src/index.ts"],
-      "bc-example-application": [
-        "packages/bc-example/application/src/index.ts"
+      "player-domain": ["./packages/player/domain/src/index.ts"],
+      "player-application": [
+        "./packages/player/application/src/index.ts"
       ],
-      "bc-example-infrastructure": [
-        "packages/bc-example/infrastructure/src/index.ts"
+      "player-infrastructure": [
+        "./packages/player/infrastructure/src/index.ts"
       ]
     }
   },

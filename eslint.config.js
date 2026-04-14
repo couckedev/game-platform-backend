@@ -34,18 +34,12 @@ import tsPlugin from "@typescript-eslint/eslint-plugin";
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
   {
-    ignores: [
-      "node_modules/**",
-      "dist/**",
-      ".nx/**",
-      "coverage/**",
-      "tmp/**",
-    ],
+    ignores: ["node_modules/**", "dist/**", ".nx/**", "coverage/**", "tmp/**"],
   },
   {
     files: ["**/*.ts", "**/*.tsx"],
     plugins: {
-      "@typescript-eslint": tsPlugin,
+      "@typescript-eslint": /** @type {any} */ (tsPlugin),
       boundaries,
     },
     languageOptions: {
@@ -155,6 +149,12 @@ const config = [
       "no-debugger": "error",
       eqeqeq: ["error", "always"],
       curly: ["error", "all"],
+    },
+  },
+  {
+    files: ["**/*.spec.ts", "**/*.test.ts"],
+    rules: {
+      "@typescript-eslint/explicit-function-return-type": "off",
     },
   },
 ];

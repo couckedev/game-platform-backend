@@ -1,7 +1,8 @@
 {
-  "cucumber.features": ["e2e/features/**/*.feature"],
+  "cucumber.features": ["acceptance/features/**/*.feature"],
   "cucumber.glue": [
-    "e2e/step-definitions/**/*.ts",
-    "e2e/support/**/*.ts"
-  ]
+    "acceptance/step-definitions/**/*.ts",
+    "acceptance/support/**/*.ts"
+  ],
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

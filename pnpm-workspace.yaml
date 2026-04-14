@@ -2,4 +2,4 @@ packages:
   - "apps/*"
   - "packages/*"
   - "packages/*/*"
-  - "e2e"
+  - "acceptance"

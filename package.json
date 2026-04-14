@@ -4,14 +4,17 @@
   "scripts": {
     "build": "pnpm nx run-many --target=build",
     "test": "pnpm nx run-many --target=test",
-    "e2e": "pnpm nx run game-platform-e2e:e2e",
+    "acceptance:run": "pnpm nx run game-platform-acceptance:run",
+    "acceptance:dry-run": "pnpm nx run game-platform-acceptance:dry-run",
     "lint": "pnpm nx run-many --target=lint",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "player:test": "pnpm nx run-many --target=test --projects=tag:scope:player"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
+    "@js-temporal/polyfill": "^0.5.0",
     "@nx/eslint": "19.8.14",
     "@nx/js": "19.8.14",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
@@ -21,7 +24,8 @@
     "nx": "19.8.14",
     "prettier": "^3.3.3",
     "tsup": "^8.3.0",
-    "typescript": "^5.6.3"
+    "typescript": "^6.0.0",
+    "vitest": "^4.1.4"
   },
   "engines": {
     "node": ">=20",
