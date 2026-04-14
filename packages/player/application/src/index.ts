@@ -1,0 +1,1 @@
+export * from './registration/use-cases/register-player';

@@ -42,7 +42,7 @@ monorepo-modulith-template/
 │       │   └── src/
 │       ├── application/           # Use Cases, Ports, Application Services
 │       │   └── src/
-│       └── infrastructure/        # Adapters, Repositories impl, External Services
+│       └── adapters/        # Adapters, Repositories impl, External Services
 │           └── src/
 │
 ├── .changeset/
@@ -74,7 +74,7 @@ Each domain is organized as a BC with three layers:
 packages/<bc-name>/
   ├── domain/        # type:domain  — Pure business logic, no dependencies
   ├── application/   # type:application — Use cases, depends on domain + shared-kernel
-  └── infrastructure/ # type:infrastructure — Adapters, depends on domain + application + shared-kernel
+  └── adapters/ # type:adapters — Adapters, depends on domain + application + shared-kernel
 ```
 
 ### Shared-Kernel Structure
@@ -115,7 +115,7 @@ Every project **must** declare tags in its `project.json`:
 |-----|-------------|
 | `type:domain` | Pure domain layer |
 | `type:application` | Application / use case layer |
-| `type:infrastructure` | Infrastructure / adapter layer |
+| `type:adapters` | Infrastructure / adapter layer |
 | `type:app` | Deployable application |
 | `type:shared-kernel` | Shared kernel package (flat, no DDD layers) |
 | `scope:<bc-name>` | Bounded Context name (e.g. `scope:catalog`) |
@@ -124,23 +124,23 @@ Every project **must** declare tags in its `project.json`:
 ### Allowed Dependency Flow
 
 ```
-shared-kernel    ←  domain  ←  application  ←  infrastructure  ←  app
+shared-kernel    ←  domain  ←  application  ←  adapters  ←  app
 ```
 
 **Full boundary rule matrix:**
 
-| Source → Target | domain | application | infrastructure | app | shared-kernel |
+| Source → Target | domain | application | adapters | app | shared-kernel |
 |---|---|---|---|---|---|
 | **domain** | ✅ own BC | ❌ | ❌ | ❌ | ✅ |
 | **application** | ✅ own BC | ✅ own BC | ❌ | ❌ | ✅ |
-| **infrastructure** | ✅ own BC | ✅ own BC | ✅ own BC | ❌ | ✅ |
+| **adapters** | ✅ own BC | ✅ own BC | ✅ own BC | ❌ | ✅ |
 | **app** | ❌ | ✅ any | ✅ any | ✅ own | ✅ |
 | **shared-kernel** | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 **Strictly forbidden:**
 - ❌ `domain` → `application`
-- ❌ `domain` → `infrastructure`
-- ❌ `application` → `infrastructure`
+- ❌ `domain` → `adapters`
+- ❌ `application` → `adapters`
 - ❌ Cross-BC imports (except via `shared-kernel`)
 - ❌ `shared-kernel` → `shared-kernel`
 
@@ -156,8 +156,8 @@ reading from an outbox table, replaying events in an event-sourced system, or ma
 row back into a rich Value Object.
 
 This is **not a model-smell** as long as:
-- The shared-kernel types are pure value types (no side effects, no infrastructure dependencies).
-- The dependency flows in one direction only: infrastructure reads shared-kernel, never the reverse.
+- The shared-kernel types are pure value types (no side effects, no adapters dependencies).
+- The dependency flows in one direction only: adapters reads shared-kernel, never the reverse.
 
 #### shared-kernel → shared-kernel
 
@@ -238,11 +238,11 @@ pnpm nx g @nx/js:library bc-catalog-application \
   --bundler=tsup \
   --tags="type:application,scope:catalog"
 
-# Create an infrastructure package
-pnpm nx g @nx/js:library bc-catalog-infrastructure \
-  --directory=packages/bc-catalog/infrastructure \
+# Create an adapters package
+pnpm nx g @nx/js:library bc-catalog-adapters \
+  --directory=packages/bc-catalog/adapters \
   --bundler=tsup \
-  --tags="type:infrastructure,scope:catalog"
+  --tags="type:adapters,scope:catalog"
 ```
 
 ### Adding a new Shared-Kernel package
