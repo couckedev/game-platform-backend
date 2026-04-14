@@ -1,5 +1,6 @@
 // @ts-check
 import boundaries from "eslint-plugin-boundaries";
+import importPlugin from "eslint-plugin-import";
 import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 
@@ -8,7 +9,7 @@ import tsPlugin from "@typescript-eslint/eslint-plugin";
  *
  *   type:domain          — Pure domain layer: entities, value objects, aggregates, domain events
  *   type:application     — Application layer: use cases, ports, application services
- *   type:infrastructure  — Infrastructure layer: adapters, repositories impl, external services
+ *   type:adapters  — Infrastructure layer: adapters, repositories impl, external services
  *   type:app             — Deployable application (NestJS, Next.js, etc.)
  *   type:shared-kernel   — Shared kernel: flat package with shared types, VOs, utilities (no DDD layers)
  *   scope:<bc-name>      — Bounded context name (e.g. scope:catalog, scope:orders)
@@ -16,11 +17,11 @@ import tsPlugin from "@typescript-eslint/eslint-plugin";
  *
  * Allowed dependency flow (Clean Architecture):
  *
- *   shared  ←  domain  ←  application  ←  infrastructure  ←  app
+ *   shared  ←  domain  ←  application  ←  adapters  ←  app
  *
  * Special cases explicitly allowed:
  *
- *   infrastructure → shared-kernel:
+ *   adapters → shared-kernel:
  *     Infrastructure may import shared-kernel types to reconstitute stored or serialized
  *     domain events and value objects (e.g. for the outbox pattern or event sourcing).
  *     This is intentional and NOT a model-smell when shared-kernel types are pure value
@@ -34,19 +35,14 @@ import tsPlugin from "@typescript-eslint/eslint-plugin";
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
   {
-    ignores: [
-      "node_modules/**",
-      "dist/**",
-      ".nx/**",
-      "coverage/**",
-      "tmp/**",
-    ],
+    ignores: ["node_modules/**", "dist/**", ".nx/**", "coverage/**", "tmp/**"],
   },
   {
     files: ["**/*.ts", "**/*.tsx"],
     plugins: {
-      "@typescript-eslint": tsPlugin,
+      "@typescript-eslint": /** @type {any} */ (tsPlugin),
       boundaries,
+      import: /** @type {any} */ (importPlugin),
     },
     languageOptions: {
       parser: tsParser,
@@ -69,13 +65,14 @@ const config = [
           capture: ["bc"],
         },
         {
-          type: "infrastructure",
-          pattern: "packages/*/infrastructure/src",
+          type: "adapters",
+          pattern: "packages/*/adapters/src",
           capture: ["bc"],
         },
         {
           type: "shared",
-          pattern: "packages/shared-kernel{,-*}/src",
+          pattern: "packages/shared/*/src",
+          capture: ["sharedName"],
         },
         {
           type: "app",
@@ -110,10 +107,10 @@ const config = [
         {
           default: "disallow",
           rules: [
-            // shared-kernel can be imported by everyone (including infrastructure —
-            // infrastructure may need shared VOs to reconstitute domain events from storage)
+            // shared-kernel can be imported by everyone (including adapters —
+            // adapters may need shared VOs to reconstitute domain events from storage)
             {
-              from: ["domain", "application", "infrastructure", "app"],
+              from: ["domain", "application", "adapters", "app"],
               allow: ["shared"],
             },
             // domain can only import from same-BC domain and shared-kernel
@@ -126,18 +123,18 @@ const config = [
               from: ["application"],
               allow: [["domain", { bc: "${from.bc}" }]],
             },
-            // infrastructure can import from same-BC application, same-BC domain, and shared-kernel
+            // adapters can import from same-BC application, same-BC domain, and shared-kernel
             {
-              from: ["infrastructure"],
+              from: ["adapters"],
               allow: [
                 ["domain", { bc: "${from.bc}" }],
                 ["application", { bc: "${from.bc}" }],
               ],
             },
-            // apps can import from infrastructure and application (any BC)
+            // apps can import from adapters and application (any BC)
             {
               from: ["app"],
-              allow: ["infrastructure", "application"],
+              allow: ["adapters", "application"],
             },
             // shared-kernel packages must not depend on other packages, including other shared-kernels
             {
@@ -155,6 +152,46 @@ const config = [
       "no-debugger": "error",
       eqeqeq: ["error", "always"],
       curly: ["error", "all"],
+
+      // Dependency hygiene: forbid importing a package not declared in the
+      // closest package.json. Catches reliance on phantom/hoisted deps and
+      // enforces explicit workspace:* declarations.
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          devDependencies: false,
+          optionalDependencies: false,
+          peerDependencies: true,
+        },
+      ],
+    },
+  },
+  {
+    files: [
+      "**/*.spec.ts",
+      "**/*.test.ts",
+      "**/vitest.config.ts",
+      "**/eslint.config.js",
+      "acceptance/**",
+    ],
+    plugins: {
+      import: /** @type {any} */ (importPlugin),
+    },
+    rules: {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          devDependencies: true,
+          optionalDependencies: false,
+          peerDependencies: true,
+        },
+      ],
+    },
+  },
+  {
+    files: ["**/*.spec.ts", "**/*.test.ts"],
+    rules: {
+      "@typescript-eslint/explicit-function-return-type": "off",
     },
   },
 ];
