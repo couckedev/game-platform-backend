@@ -4,7 +4,7 @@ import { NicknameMinimumLetterCount } from "../specifications/nickname-minimum-l
 export class NicknameInsufficientLetterCountError extends BusinessError {
   constructor(nickname: string) {
     super(
-      `Nickname ${nickname} must contain at least ${NicknameMinimumLetterCount.MINIMUM_LETTER_COUNT}`,
+      `Nickname ${nickname} must contain at least ${NicknameMinimumLetterCount.MINIMUM_LETTER_COUNT} letters`,
     );
   }
 }

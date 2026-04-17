@@ -1,6 +1,8 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { GamePlatformWorld } from "../../support/world";
+import { Nickname, NicknameClaim } from "player-domain";
+import { PlayerId } from "../../../packages/player/domain/src/player-identity";
 
 // -- Background --
 
@@ -27,10 +29,9 @@ Given<GamePlatformWorld>(
 Given<GamePlatformWorld>(
   "nickname {string} is already claimed by player with player id {string}",
   async function (nickname: string, playerId: string) {
-    await this.registerPlayerUseCase.execute({
-      nickname,
-      playerId,
-    });
+    const nicknameClaim = new NicknameClaim(Nickname.create(nickname));
+    nicknameClaim.claim(new PlayerId(playerId), this.fixedTime);
+    await this.nicknameClaimRepository.save(nicknameClaim);
   },
 );
 

@@ -1,1 +1,1 @@
-export default {};
+export * from './persistence/in-memory-nickname-claim-repository';

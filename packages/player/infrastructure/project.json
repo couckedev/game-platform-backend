@@ -4,7 +4,7 @@
   "sourceRoot": "packages/player/infrastructure/src",
   "projectType": "library",
   "tags": ["type:infrastructure", "scope:player"],
-  "implicitDependencies": ["player-domain", "player-application"],
+  "implicitDependencies": ["player-domain", "player-application", "shared-time"],
   "targets": {
     "build": {
       "executor": "nx:run-commands",

@@ -1,0 +1,1 @@
+export * from './value-objects/player-id.value-object';
