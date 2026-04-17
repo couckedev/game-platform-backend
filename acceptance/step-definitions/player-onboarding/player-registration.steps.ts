@@ -1,8 +1,7 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { GamePlatformWorld } from "../../support/world";
-import { Nickname, NicknameClaim } from "player-domain";
-import { PlayerId } from "../../../packages/player/domain/src/player-identity";
+import { Nickname, NicknameClaim, PlayerId, ExternalAccountId } from "player-domain";
 
 // -- Background --
 
@@ -35,6 +34,13 @@ Given<GamePlatformWorld>(
   },
 );
 
+Given<GamePlatformWorld>(
+  "visitor has typed valid nickname",
+  async function () {    
+    this.nickname = 'nickname';
+  },
+);
+
 // -- When --
 
 When<GamePlatformWorld>("registration is requested", async function () {
@@ -42,6 +48,7 @@ When<GamePlatformWorld>("registration is requested", async function () {
     await this.registerPlayerUseCase.execute({
       playerId: this.playerId,
       nickname: this.nickname,
+      externalAccountId: this.externalAccountid
     });
     this.registrationError = null;
   } catch (error) {
@@ -63,6 +70,24 @@ Then<GamePlatformWorld>(
   "error message should be {string}",
   function (expectedMessage: string) {
     assert.equal(this.registrationError?.message, expectedMessage);
+  },
+);
+
+Then<GamePlatformWorld>(
+  "link between external account and player internal account should have been created",
+  async function () {
+    const externalAccountId = new ExternalAccountId(this.externalAccountid);
+    const existingExternalAccountLink = await this.externalAccountLinkRepository.load(externalAccountId);
+    assert.notEqual(existingExternalAccountLink, null);
+  },
+);
+
+Then<GamePlatformWorld>(
+  "player account should have been created",
+  async function () {
+    const playerId = new PlayerId(this.playerId);
+    const existingPlayerAccount = await this.playerAccountRepository.load(playerId);
+    assert.notEqual(existingPlayerAccount, null);
   },
 );
 

@@ -45,12 +45,19 @@ Feature: Player registration
       Then registration should be rejected
       And error message should be "Nickname player is already claimed by another player"
 
-  # Rule: Registration process should create player internal identity
+  Rule: Registration process should link external account and player internal account
 
-  #   Scenario: Create player account on registration process
-  #     Given visitor has typed valid nickname
-  #     When registration is requested
-  #     Then player account should have been created
+    Scenario: Create link between external account and player internal account
+      Given visitor has typed valid nickname
+      When registration is requested
+      Then link between external account and player internal account should have been created
+
+  Rule: Registration process should create player internal identity
+    Scenario: Create player account on registration process
+      Given visitor has typed valid nickname
+      When registration is requested
+      Then player account should have been created
+      
 #   Rule: Registration process should create player resources
 #     Scenario: Create player profile on registration process
 #       Given a registration request
