@@ -71,9 +71,6 @@ importers:
       player-domain:
         specifier: workspace:*
         version: link:../domain
-      shared-time:
-        specifier: workspace:*
-        version: link:../../shared-time
 
   packages/player/domain:
     dependencies:
@@ -92,11 +89,6 @@ importers:
       player-domain:
         specifier: workspace:*
         version: link:../domain
-      shared-time:
-        specifier: workspace:*
-        version: link:../../shared-time
-
-  packages/shared-time: {}
 
 packages:
 

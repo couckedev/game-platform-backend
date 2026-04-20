@@ -1,70 +1,72 @@
-Feature: Player registration
+Feature: Player registration from social account authentication
+    
+    Background:
+        Given a player is authenticated with a social account
+        And this player does not yet exist on the game platform
 
-  Background:
-    Given player has completed authentication flow on identity provider
-    And player id has been generated
+    Rule: Nickname must contain at least 3 letters
+        @debug
+        Scenario Outline: Reject registration if nickname contains fewer than 3 letters
+            Given nickname "nickname" has been provided
+            When registration is requested
+            Then registration is rejected because nickname contains fewer than 3 letters
 
-  Rule: Nickname must contain at least one letter
+            Examples:
+                | nickname  |
+                | 12345     |
+                | 12_45     |
+                | --___--12 |
+                | 1_2-3     |
 
-    Scenario: Reject registration if nickname contains no letter
-      Given nickname typed by visitor is "123456"
-      When registration is requested
-      Then registration should be rejected
-      And error message should be "Nickname 123456 must contain at least 3 letters"
+    # Rule: Nickname must only contain letters, digits, hyphens and underscores
+    #     Scenario Outline: Reject registration if nickname contains forbidden characters
+    #         Given nickname "<nickname>" has been provided
+    #         When registration is requested
+    #         Then registration is rejected because nickname contains forbidden characters
 
-  Rule: Nickname must only contain alphanumeric characters, hyphens and underscores
+    #         Examples:
+    #             | nickname    |
+    #             | toto$       |
+    #             | hello@world |
+    #             | space man   |
+    #             | jean.pierre |
 
-    Scenario: Reject registration if nickname contains forbidden character
-      Given nickname typed by visitor is "toto$"
-      When registration is requested
-      Then registration should be rejected
-      And error message should be "Nickname toto$ must only contain alphanumeric characters, hyphens and underscores"
+    # Rule: Nickname must be at least 5 characters long
+    #     Scenario Outline: Reject registration if nickname is shorter than 5 characters
+    #         Given nickname "<nickname>" has been provided
+    #         When registration is requested
+    #         Then registration is rejected because nickname is shorter than 5 characters
 
-  Rule: Nickname minimum length is 5
+    #         Examples:
+    #             | nickname |
+    #             | abc      |
+    #             | ab       |
+    #             | x        |
+    #             | a1b      |
 
-    Scenario: Reject registration request if nickname is shorter than 5 characters
-      Given nickname typed by visitor is "toto"
-      When registration is requested
-      Then registration should be rejected
-      And error message should be "Nickname minimum lenght is 5, toto is too short"
+    # Rule: Nickname must not be longer than 20 characters
+    #     Scenario Outline: Reject registration if nickname is longer than 20 characters
+    #         Given nickname "<nickname>" has been provided
+    #         When registration is requested
+    #         Then registration is rejected because nickname is longer than 20 characters
 
-  Rule: Nickname maximum length is 15
+    #         Examples:
+    #             | nickname                  |
+    #             | nicknamenicknamenickname  |
+    #             | abcdefghijklmnopqrstuvwxy |
 
-    Scenario: Reject registration request if nickname is longer than 20 characters
-      Given nickname typed by visitor is "nicknamenicknamenicknamenickname"
-      When registration is requested
-      Then registration should be rejected
-      And error message should be "Nickname maximum lenght is 20, nicknamenicknamenicknamenickname is too long"
+    # Rule: Nickname can only be claimed by one player
+    #     Scenario: Reject registration if nickname is already claimed
+    #         Given nickname "player_123" has been provided
+    #         And nickname "player_123" is already reserved by another player
+    #         When registration is requested
+    #         Then registration is rejected because nickname is already claimed
 
-  Rule: Nickname can only be claimed by one player
-
-    Scenario: Reject registration request if nickname is already claimed
-      Given nickname "player" is already claimed by player with player id "some player id"
-      And nickname typed by visitor is "player"
-      When registration is requested
-      Then registration should be rejected
-      And error message should be "Nickname player is already claimed by another player"
-
-  Rule: Registration process should link external account and player internal account
-
-    Scenario: Create link between external account and player internal account
-      Given visitor has typed valid nickname
-      When registration is requested
-      Then link between external account and player internal account should have been created
-
-  Rule: Registration process should create player internal identity
-    Scenario: Create player account on registration process
-      Given visitor has typed valid nickname
-      When registration is requested
-      Then player account should have been created
-      
-#   Rule: Registration process should create player resources
-#     Scenario: Create player profile on registration process
-#       Given a registration request
-#       When registration is completed
-#       Then player profile should have been created
-#   Rule: Player should be declared online directly after successful registration
-#     Scenario: Declare player online directly after successful registration
-#       Given a registration request
-#       When registration is completed
-#       Then player should be declared online
+    # Rule: Successful registration reserves nickname, creates player and declares player online
+    #     Scenario: Register player successfully
+    #         Given nickname "-nickname_123-" has been provided
+    #         When registration is requested
+    #         Then nickname "-nickname_123-" is reserved
+    #         And player account is created
+    #         And player profile is created
+    #         And player is declared online

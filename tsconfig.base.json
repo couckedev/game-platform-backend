@@ -20,13 +20,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "paths": {
-      "player-domain": ["./packages/player/domain/src/index.ts"],
-      "player-application": [
-        "./packages/player/application/src/index.ts"
-      ],
-      "player-infrastructure": [
-        "./packages/player/infrastructure/src/index.ts"
-      ]
     }
   },
   "exclude": ["node_modules", "dist", "tmp"]

@@ -1,18 +1,13 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "..",
-    "outDir": "./dist",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true,
-    "types": ["node"]
+    "noEmit": true,
+    "types": ["node"],
+    "paths": {
+      "player-domain": ["../packages/player/domain/src/index.ts"],
+      "player-application": ["../packages/player/application/src/index.ts"],
+      "player-infrastructure": ["../packages/player/infrastructure/src/index.ts"]
+    }
   },
-  "include": [
-    "step-definitions/**/*.ts",
-    "support/**/*.ts"
-  ]
+  "include": ["backend/**/*.ts", "support/**/*.ts", "frontend/**/*.ts"]
 }

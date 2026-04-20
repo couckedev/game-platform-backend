@@ -7,8 +7,7 @@
   "dependencies": {
     "@couckedev/ddd-core": "^2.0.0",
     "player-application": "workspace:*",
-    "player-domain": "workspace:*",
-    "shared-time": "workspace:*"
+    "player-domain": "workspace:*"
   },
   "private": true
 }

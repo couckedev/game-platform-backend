@@ -3,13 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "run": "tsx node_modules/@cucumber/cucumber/bin/cucumber.js",
-    "dry-run": "tsx node_modules/@cucumber/cucumber/bin/cucumber.js --dry-run"
+    "run:back": "tsx node_modules/@cucumber/cucumber/bin/cucumber.js --config cucumber-back.json",
+    "dry-run:back": "tsx node_modules/@cucumber/cucumber/bin/cucumber.js --dry-run --config cucumber-back.json",
+    "run:front": "tsx node_modules/@cucumber/cucumber/bin/cucumber.js --config cucumber-front.json",
+    "dry-run:front": "tsx node_modules/@cucumber/cucumber/bin/cucumber.js --dry-run --config cucumber-front.json"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^11.2.0",
     "@js-temporal/polyfill": "^0.5.0",
     "@types/node": "^25.6.0",
+    "player-application": "workspace:*",
+    "player-infrastructure": "workspace:*",
     "tsx": "^4.21.0"
   }
 }
