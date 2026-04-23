@@ -3,7 +3,7 @@ import { strict as assert } from "node:assert";
 import type { GamePlatformWorld } from "../../support/world";
 import type { BusinessError } from "@couckedev/ddd-core";
 import { type RegisterPlayerInput } from "player-application";
-import { NicknameRejectionReason } from "player-domain";
+import { Nickname, NicknameRejectionReason, Player, PlayerId } from "player-domain";
 
 // -- Background --
 
@@ -31,12 +31,14 @@ Given<GamePlatformWorld>(
 );
 
 Given<GamePlatformWorld>(
-  "nickname {string} is already claimed by player with player id {string}",
-  async function (nickname: string, playerId: string) {
-    await this.registerPlayerUseCase.execute({
-      nickname,
-      playerId,
-    });
+  "nickname {string} is already reserved by another player",
+  async function (nickname: string) {
+    const playerId = PlayerId.create("player-id");
+    const nicknameVO = Nickname.create(nickname);
+    const createdAt = this.requireClock().now();
+    const existingPlayer = Player.create(playerId, nicknameVO, createdAt);
+    const playerRepository = this.requirePlayerRepository();
+    await playerRepository.save(existingPlayer);
   },
 );
 
@@ -45,10 +47,10 @@ Given<GamePlatformWorld>(
 When<GamePlatformWorld>("registration is requested", async function () {
   try {
     const registerPlayerInput: RegisterPlayerInput = {
-      playerId: this.playerId,
-      nickname: this.nickname,
+      playerId: this.requirePlayerId(),
+      nickname: this.requireNickname(),
     };
-    await this.registerPlayerUseCase.execute(registerPlayerInput);
+    await this.requireRegisterPlayerUseCase().execute(registerPlayerInput);
     this.registrationError = null;
   } catch (error) {
     this.registrationError = error as BusinessError;
@@ -99,5 +101,27 @@ Then<GamePlatformWorld>(
   "registration will be rejected because nickname is too long",
   function () {
     assert.equal(this.registrationError?.code, NicknameRejectionReason.TooLong);
+  },
+);
+
+Then<GamePlatformWorld>(
+  "player with nickname {string} will be created",
+  async function (nickname: string) {
+    const playerId = PlayerId.create(this.requirePlayerId());
+    const playerRepository =
+      this.requirePlayerRepository();
+    const player =
+      await playerRepository.load(playerId);
+    assert.equal(player?.nickname.value, nickname);
+  },
+);
+
+Then<GamePlatformWorld>(
+  "registration is rejected because nickname is already reserved",
+  function () {
+    assert.equal(
+      this.registrationError?.code,
+      NicknameRejectionReason.AlreadyReserved,
+    );
   },
 );

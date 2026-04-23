@@ -1,4 +1,4 @@
-import { describe } from "vitest";
+import { describe, expect, it } from "vitest";
 import { Nickname } from "./nickname.value-object";
 import { NicknameTooShortError } from "../../errors/nickname-too-short.error";
 import { NicknameTooLongError } from "../../errors/nickname-too-long.error";

@@ -3,4 +3,5 @@ export enum NicknameRejectionReason {
   TooShort = "NICKNAME_TOO_SHORT",
   TooFewLetters = "NICKNAME_TOO_FEW_LETTERS",
   InvalidCharacters = "NICKNAME_INVALID_CHARACTERS",
+  AlreadyReserved = "ALREADY_RESERVED",
 }

@@ -38,9 +38,6 @@ importers:
       prettier:
         specifier: ^3.3.3
         version: 3.8.2
-      temporal-compat:
-        specifier: workspace:*
-        version: link:packages/shared/temporal-compat
       tsup:
         specifier: ^8.3.0
         version: 8.5.1(@swc/core@1.5.29(@swc/helpers@0.5.21))(postcss@8.5.10)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3)
@@ -54,14 +51,11 @@ importers:
   acceptance:
     devDependencies:
       '@couckedev/ddd-core':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       '@cucumber/cucumber':
         specifier: ^11.2.0
         version: 11.3.0
-      '@js-temporal/polyfill':
-        specifier: ^0.5.0
-        version: 0.5.1
       '@types/node':
         specifier: ^25.6.0
         version: 25.6.0
@@ -77,6 +71,9 @@ importers:
       shared-adapters:
         specifier: workspace:*
         version: link:../packages/shared/adapters
+      shared-time:
+        specifier: workspace:*
+        version: link:../packages/shared/time
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -84,8 +81,8 @@ importers:
   packages/player/adapters:
     dependencies:
       '@couckedev/ddd-core':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       player-application:
         specifier: workspace:*
         version: link:../application
@@ -96,8 +93,8 @@ importers:
   packages/player/application:
     dependencies:
       '@couckedev/ddd-core':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       player-domain:
         specifier: workspace:*
         version: link:../domain
@@ -108,8 +105,11 @@ importers:
   packages/player/domain:
     dependencies:
       '@couckedev/ddd-core':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
+      shared-time:
+        specifier: workspace:*
+        version: link:../../shared/time
     devDependencies:
       vitest:
         specifier: ^4.1.4
@@ -120,12 +120,6 @@ importers:
       shared-time:
         specifier: workspace:*
         version: link:../time
-
-  packages/shared/temporal-compat:
-    dependencies:
-      '@js-temporal/polyfill':
-        specifier: ^0.5.0
-        version: 0.5.1
 
   packages/shared/time: {}
 
@@ -731,8 +725,8 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
-  '@couckedev/ddd-core@2.1.0':
-    resolution: {integrity: sha512-ymTqK3zXZm4Za/jw1icAJA6Jl0wxNdE0IuIL1kMNyQZB7NSmJza8TlJn+ZzM1byK3PM6bA5MoKI0I4xVWMuJCA==, tarball: https://npm.pkg.github.com/download/@couckedev/ddd-core/2.1.0/b33153284217055de674c04bda07a66937ef43f9}
+  '@couckedev/ddd-core@2.2.0':
+    resolution: {integrity: sha512-ob3HXchE3hxwKQHnPzWuWbUGZa5NmDGmarhtmK+RDHcCRDk32FkTW744deSFWBvSwckGOXQQmduvSL+iRlJpRw==, tarball: https://npm.pkg.github.com/download/@couckedev/ddd-core/2.2.0/ea056c9764edee3847bd9ad45618d39cea23ab4e}
     engines: {node: '>=18'}
 
   '@cspotcode/source-map-support@0.8.1':
@@ -1051,10 +1045,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
-
-  '@js-temporal/polyfill@0.5.1':
-    resolution: {integrity: sha512-hloP58zRVCRSpgDxmqCWJNlizAlUgJFqG2ypq79DCvyv9tHjRYMDOcPFjzfl/A1/YxDvRCZz8wvZvmapQnKwFQ==}
-    engines: {node: '>=12'}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -2721,9 +2711,6 @@ packages:
   js-yaml@4.1.1:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
     hasBin: true
-
-  jsbi@4.3.2:
-    resolution: {integrity: sha512-9fqMSQbhJykSeii05nxKl4m6Eqn2P6rOlYiS+C5Dr/HPIU/7yZxu5qzbs40tgaFORiw2Amd0mirjxatXYMkIew==}
 
   jsesc@3.1.0:
     resolution: {integrity: sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==}
@@ -4806,7 +4793,7 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@couckedev/ddd-core@2.1.0': {}
+  '@couckedev/ddd-core@2.2.0': {}
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -5113,10 +5100,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
-
-  '@js-temporal/polyfill@0.5.1':
-    dependencies:
-      jsbi: 4.3.2
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -6982,8 +6965,6 @@ snapshots:
   js-yaml@4.1.1:
     dependencies:
       argparse: 2.0.1
-
-  jsbi@4.3.2: {}
 
   jsesc@3.1.0: {}
 

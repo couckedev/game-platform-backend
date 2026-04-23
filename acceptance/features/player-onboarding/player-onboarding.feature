@@ -57,3 +57,10 @@ Feature: Player registration
         | nickname                  |
         | nicknamenicknamenickname  |
         | abcdefghijklmnopqrstuvwxy |
+
+  Rule: Player is created during registration
+    Scenario: Create player during player registration
+      Given nickname "player_123" has been provided
+      When registration is requested
+      Then player with nickname "player_123" will be created
+

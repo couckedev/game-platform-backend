@@ -6,7 +6,8 @@
     "player-domain",
     "player-application",
     "player-adapters",
-    "shared-adapters"
+    "shared-adapters",
+    "shared-time"
   ],
   "tags": [
     "type:acceptance"

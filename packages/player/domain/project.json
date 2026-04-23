@@ -4,6 +4,7 @@
   "sourceRoot": "packages/player/domain/src",
   "projectType": "library",
   "tags": ["type:domain", "scope:player"],
+  "implicitDependencies": ["shared-time"],
   "targets": {
     "test": {
       "executor": "nx:run-commands",

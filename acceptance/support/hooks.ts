@@ -1,17 +1,7 @@
-import { BeforeAll, AfterAll, Before, After } from '@cucumber/cucumber';
+import { Before } from "@cucumber/cucumber";
+import { setupApp } from "./app.setup";
+import type { GamePlatformWorld } from "./world";
 
-BeforeAll(async () => {
-  // Setup global avant tous les scénarios (ex: démarrage de la base de données)
-});
-
-AfterAll(async () => {
-  // Teardown global après tous les scénarios
-});
-
-Before(async () => {
-  // Setup avant chaque scénario (ex: réinitialisation de l'état)
-});
-
-After(async () => {
-  // Teardown après chaque scénario
+Before(async function (this: GamePlatformWorld) {
+  await setupApp.call(this);
 });

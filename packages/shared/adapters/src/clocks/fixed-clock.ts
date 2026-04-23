@@ -1,9 +1,9 @@
-import type { ClockPort } from "shared-time";
+import type { ClockPort, Timestamp } from "shared-time";
 
 export class FixedClock implements ClockPort {
-  constructor(public readonly fixedTime: Temporal.Instant) {}
+  constructor(public readonly fixedTime: Timestamp) {}
 
-  now(): Temporal.Instant {
+  now(): Timestamp {
     return this.fixedTime;
   }
 }

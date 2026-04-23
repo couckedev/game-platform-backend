@@ -7,7 +7,7 @@
   "dependencies": {
     "player-domain": "workspace:*",
     "shared-time": "workspace:*",
-    "@couckedev/ddd-core": "^2.1.0"
+    "@couckedev/ddd-core": "^2.2.0"
   },
   "private": true
 }
