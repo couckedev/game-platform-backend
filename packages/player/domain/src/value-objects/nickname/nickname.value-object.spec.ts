@@ -56,4 +56,19 @@ describe("Nickname VO", () => {
       expect(nicknameVOCreation).toThrow(expectedError);
     });
   });
+
+  describe('equals', () => {
+    it('should return true if nickname has same value', () => {
+      const nickname1 = Nickname.create('nickname1');
+      const nickname2 = Nickname.create('nickname1');
+
+      expect(nickname1.equals(nickname2)).toBeTruthy();
+    })
+    it('should return false if nickname has different value', () => {      
+      const nickname1 = Nickname.create('nickname1');
+      const nickname2 = Nickname.create('nickname2');
+
+      expect(nickname1.equals(nickname2)).toBeFalsy();
+    })
+  })
 });

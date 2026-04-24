@@ -5,13 +5,13 @@ import { Player } from "./player.aggregate";
 import { Nickname } from "../value-objects/nickname/nickname.value-object";
 
 describe('Player aggregate', () => {
-    describe('create', () => {
+    describe('register', () => {
         it('should return new player with nickname', () => {
             const playerId = PlayerId.create('player-id');
             const nickname = Nickname.create('nickname');
             const createdAt = Timestamp.fromISOString("2026-04-15T12:00:00Z");
 
-            const newPlayer = Player.create(playerId, nickname, createdAt);
+            const newPlayer = Player.register(playerId, nickname, createdAt);
 
             expect(newPlayer.playerId).toStrictEqual(playerId);
             expect(newPlayer.nickname).toStrictEqual(nickname);
@@ -39,7 +39,7 @@ describe('Player aggregate', () => {
             const nickname = Nickname.create('nickname');
             const createdAt = Timestamp.fromISOString("2026-04-15T12:00:00Z");
 
-            const player = Player.create(playerId, nickname, createdAt);
+            const player = Player.register(playerId, nickname, createdAt);
 
             expect(player.aggregateId).toStrictEqual(playerId.value);
         })
@@ -51,7 +51,7 @@ describe('Player aggregate', () => {
             const nickname = Nickname.create('nickname');
             const createdAt = Timestamp.fromISOString("2026-04-15T12:00:00Z");
 
-            const player = Player.create(playerId, nickname, createdAt);
+            const player = Player.register(playerId, nickname, createdAt);
 
             expect(player.aggregateType).toStrictEqual('player');
         })

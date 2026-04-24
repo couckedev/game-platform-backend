@@ -31,12 +31,12 @@ Given<GamePlatformWorld>(
 );
 
 Given<GamePlatformWorld>(
-  "nickname {string} is already reserved by another player",
+  "nickname {string} is already used by another player",
   async function (nickname: string) {
     const playerId = PlayerId.create("player-id");
     const nicknameVO = Nickname.create(nickname);
     const createdAt = this.requireClock().now();
-    const existingPlayer = Player.create(playerId, nicknameVO, createdAt);
+    const existingPlayer = Player.register(playerId, nicknameVO, createdAt);
     const playerRepository = this.requirePlayerRepository();
     await playerRepository.save(existingPlayer);
   },
@@ -117,11 +117,12 @@ Then<GamePlatformWorld>(
 );
 
 Then<GamePlatformWorld>(
-  "registration is rejected because nickname is already reserved",
+  "registration is rejected because nickname is already used",
   function () {
     assert.equal(
       this.registrationError?.code,
-      NicknameRejectionReason.AlreadyReserved,
+      NicknameRejectionReason.AlreadyUsed,
     );
   },
 );
+

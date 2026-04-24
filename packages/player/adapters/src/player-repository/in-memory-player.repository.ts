@@ -5,7 +5,7 @@ import type {
 } from "player-domain";
 
 export class InMemoryPlayerRepository implements PlayerRepositoryPort {
-  private readonly players = new Map<string, Player>();
+  constructor(private readonly players: Map<string, Player>) {}
 
   async load(playerId: PlayerId): Promise<Player | null> {
     const player = this.players.get(playerId.value);

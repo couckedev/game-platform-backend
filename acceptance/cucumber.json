@@ -1,7 +1,7 @@
 {
   "default": {
     "paths": ["features/**/*.feature"],
-    "require": ["support/**/*.ts", "step-definitions/**/*.steps.ts"],
+    "require": ["support/**/*.ts", "features/**/*.steps.ts"],
     "format": ["progress-bar", "html:reports/cucumber-report.html"]
   }
 }

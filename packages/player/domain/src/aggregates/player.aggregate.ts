@@ -12,7 +12,7 @@ export class Player extends AbstractBasicAggregate {
     super();
   }
 
-  static create(
+  static register(
     playerId: PlayerId,
     nickname: Nickname,
     createdAt: Timestamp,

@@ -6,7 +6,7 @@
     "types": ["node"]
   },
   "include": [
-    "step-definitions/**/*.ts",
-    "support/**/*.ts"
+    "support/**/*.ts",
+    "features/**/*.steps.ts"
   ]
 }

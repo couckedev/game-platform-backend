@@ -15,7 +15,7 @@
     },
     "build": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/dist"],
+      "outputs": ["{workspaceRoot}/dist/packages/player/domain"],
       "options": {
         "command": "npx tsc -p packages/player/domain/tsconfig.lib.json"
       }

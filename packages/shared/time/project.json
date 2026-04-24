@@ -7,7 +7,7 @@
   "targets": {
     "build": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/dist"],
+      "outputs": ["{workspaceRoot}/dist/packages/shared/time"],
       "options": {
         "command": "npx tsc -p packages/shared/time/tsconfig.lib.json"
       }

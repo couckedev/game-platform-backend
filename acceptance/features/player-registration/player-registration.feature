@@ -1,4 +1,4 @@
-Feature: Player registration
+Feature: Register new player
 
   Background:
     Given a player is authenticated with external account
@@ -59,8 +59,16 @@ Feature: Player registration
         | abcdefghijklmnopqrstuvwxy |
 
   Rule: Player is created during registration
+
     Scenario: Create player during player registration
       Given nickname "player_123" has been provided
       When registration is requested
       Then player with nickname "player_123" will be created
 
+  Rule: Nickname is linked to only one player
+
+    Scenario: Reject registration if nickname is already used
+      Given nickname "player_123" has been provided
+      And nickname "player_123" is already used by another player
+      When registration is requested
+      Then registration is rejected because nickname is already used
