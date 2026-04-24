@@ -210,12 +210,25 @@ Triggered on every PR targeting `main`. Runs unit tests and lint **in parallel**
 
 ### Prerequisites
 
-- Node.js >= 20
-- pnpm >= 9
+- **Node.js >= 24** and **pnpm 9.12.0** (both pinned via [Volta](https://volta.sh) in `package.json`).
+
+The recommended setup is to install [Volta](https://volta.sh), which will automatically use the correct Node and pnpm versions when you `cd` into this repository — no manual switching required.
 
 ```bash
-npm install -g pnpm@latest
+# Install Volta (once, globally)
+curl https://get.volta.sh | bash
+
+# Enable pnpm support in Volta (add to your shell profile)
+export VOLTA_FEATURE_PNPM=1
 ```
+
+Alternative: if you prefer not to use Volta, any Node.js >= 24 installation will work. The `packageManager` field in `package.json` combined with [Corepack](https://nodejs.org/api/corepack.html) (bundled with Node.js) will resolve the correct pnpm version automatically:
+
+```bash
+corepack enable
+```
+
+`engine-strict=true` is enabled in `.npmrc`, so `pnpm install` will **fail fast** on an unsupported Node version rather than producing confusing errors later.
 
 ### Install dependencies
 

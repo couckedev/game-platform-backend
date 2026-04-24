@@ -1,0 +1,37 @@
+# VCS
+.git
+.gitignore
+.gitattributes
+
+# Node / pnpm
+node_modules
+**/node_modules
+.pnpm-store
+
+# Build outputs
+dist
+**/dist
+.nx/cache
+.nx/workspace-data
+coverage
+**/coverage
+
+# Editor / OS
+.vscode
+.idea
+.DS_Store
+*.log
+
+# Env (never ship local envs into images)
+.env
+.env.*
+!.env.example
+
+# Docs & infra-only files (not needed at build time)
+README.md
+docker-compose*.yml
+**/Dockerfile
+**/*.md
+
+# Test artefacts
+acceptance/reports

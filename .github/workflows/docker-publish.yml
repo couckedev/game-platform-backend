@@ -102,6 +102,8 @@ jobs:
           context: .
           file: ./apps/${{ matrix.app }}/Dockerfile
           push: true
+          secrets: |
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           tags: |
             ghcr.io/${{ github.repository }}/${{ matrix.app }}:${{ steps.version.outputs.version }}
             ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest

@@ -170,6 +170,7 @@ const config = [
     files: [
       "**/*.spec.ts",
       "**/*.test.ts",
+      "**/tsup.config.ts",
       "**/vitest.config.ts",
       "**/eslint.config.js",
       "acceptance/**",
