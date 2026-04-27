@@ -17,11 +17,11 @@ services:
       retries: 5
       start_period: 10s
 
-  flyway:
+  database-migration:
     image: flyway/flyway:11-alpine
     command: migrate
     environment:
-      FLYWAY_URL: ${DATABASE_URL}
+      FLYWAY_URL: jdbc:postgresql://database:5432/${DATABASE_DB}
       FLYWAY_USER: ${DATABASE_USER}
       FLYWAY_PASSWORD: ${DATABASE_PASSWORD}
       FLYWAY_LOCATIONS: filesystem:/flyway/sql

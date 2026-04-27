@@ -12,7 +12,9 @@
     "format": "prettier --write .",
     "player:test": "pnpm nx run-many --target=test --projects=tag:scope:player",
     "db:start": "docker compose up database",
-    "db:stop": "docker compose down database"
+    "db:stop": "docker compose down database",
+    "db:migrate": "docker compose up flyway",
+    "db:generate": "docker run --rm -v \"$(pwd)/infrastructure/db/migrations:/flyway/sql\" -e FLYWAY_LOCATIONS=filesystem:/flyway/sql flyway/flyway:11-alpine generate -name="
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
