@@ -6,8 +6,15 @@
   "types": "./src/index.ts",
   "dependencies": {
     "@couckedev/ddd-core": "^2.2.0",
+    "@testcontainers/postgresql": "^10.24.0",
+    "drizzle-orm": "^0.43.0",
     "player-application": "workspace:*",
-    "player-domain": "workspace:*"
+    "player-domain": "workspace:*",
+    "postgres": "^3.4.5",
+    "testcontainers": "^10.24.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.4"
   },
   "private": true
 }
