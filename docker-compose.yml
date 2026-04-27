@@ -1,0 +1,41 @@
+services:
+  dabatase:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DB}
+    ports:
+      - "${DATABASE_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  flyway:
+    image: flyway/flyway:11-alpine
+    command: migrate
+    environment:
+      FLYWAY_URL: ${DATABASE_URL}
+      FLYWAY_USER: ${DATABASE_USER}
+      FLYWAY_PASSWORD: ${DATABASE_PASSWORD}
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+      FLYWAY_VALIDATE_ON_MIGRATE: "true"
+    volumes:
+      - ./infrastructure/db/migrations:/flyway/sql:ro
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  postgres-data:
+
+secrets:
+  GITHUB_TOKEN:
+    environment: GITHUB_TOKEN

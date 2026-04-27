@@ -10,7 +10,9 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "format": "prettier --write .",
-    "player:test": "pnpm nx run-many --target=test --projects=tag:scope:player"
+    "player:test": "pnpm nx run-many --target=test --projects=tag:scope:player",
+    "db:start": "docker compose up database",
+    "db:stop": "docker compose down database"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
