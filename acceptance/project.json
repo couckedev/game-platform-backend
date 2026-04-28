@@ -1,5 +1,5 @@
 {
-  "name": "game-platform-acceptance",
+  "name": "acceptance",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "implicitDependencies": [

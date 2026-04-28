@@ -14,23 +14,23 @@
     "player:test:infra": "pnpm nx run player-adapters:test",
     "db:start": "docker compose up database",
     "db:stop": "docker compose down database",
-    "db:migrate": "docker compose up flyway",
-    "db:generate": "docker run --rm -v \"$(pwd)/infrastructure/db/migrations:/flyway/sql\" -e FLYWAY_LOCATIONS=filesystem:/flyway/sql flyway/flyway:11-alpine generate -name="
+    "db:migration:migrate": "docker compose up flyway",
+    "db:migration:generate": "sh -c 'FILE=\"$(pwd)/infrastructure/db/migrations/V$(date +%Y%m%d%H%M%S)__$0.sql\" && touch \"$FILE\" && echo \"Created: $FILE\"'"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.7",
+    "@changesets/cli": "^2.31.0",
     "@nx/eslint": "19.8.14",
     "@nx/js": "19.8.14",
-    "@typescript-eslint/eslint-plugin": "^8.8.1",
-    "@typescript-eslint/parser": "^8.8.1",
-    "eslint": "^9.11.1",
-    "eslint-plugin-boundaries": "^5.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
+    "@typescript-eslint/parser": "^8.59.1",
+    "eslint": "^9.39.4",
+    "eslint-plugin-boundaries": "^5.4.0",
     "eslint-plugin-import": "^2.32.0",
     "nx": "19.8.14",
-    "prettier": "^3.3.3",
-    "tsup": "^8.3.0",
-    "typescript": "^6.0.0",
-    "vitest": "^4.1.4"
+    "prettier": "^3.8.3",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
   },
   "engines": {
     "node": ">=24",

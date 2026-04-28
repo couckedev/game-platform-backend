@@ -4,7 +4,7 @@
   "sourceRoot": "packages/player/adapters/src",
   "projectType": "library",
   "tags": ["type:adapters", "scope:player"],
-  "implicitDependencies": ["player-domain", "player-application", "shared-time"],
+  "implicitDependencies": ["player-domain", "player-application", "shared-time", "testing-infra"],
   "targets": {
     "build": {
       "executor": "nx:run-commands",

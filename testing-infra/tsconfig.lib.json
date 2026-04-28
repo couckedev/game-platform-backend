@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "../../../dist/packages/testing-infra",
+    "declaration": true
+  },
+  "include": ["src/**/*.ts"],
+}

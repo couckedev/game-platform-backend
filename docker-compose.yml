@@ -27,7 +27,7 @@ services:
       FLYWAY_LOCATIONS: filesystem:/flyway/sql
       FLYWAY_VALIDATE_ON_MIGRATE: "true"
     volumes:
-      - ./infrastructure/db/migrations:/flyway/sql:ro
+      - ${DATABASE_MIGRATIONS_PATH}:/flyway/sql:ro
     depends_on:
       database:
         condition: service_healthy

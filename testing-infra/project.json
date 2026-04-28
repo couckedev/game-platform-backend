@@ -1,0 +1,17 @@
+{
+  "name": "testing-infra",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "tags": [
+    "type:infrastructure"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/testing-infra"],
+      "options": {
+        "command": "npx tsc -p testing-infra/tsconfig.lib.json"
+      }
+    }
+  }
+}

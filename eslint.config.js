@@ -175,6 +175,7 @@ const config = [
       "**/vitest.config.ts",
       "**/eslint.config.js",
       "acceptance/**",
+      "testing-infra/**",
     ],
     plugins: {
       import: /** @type {any} */ (importPlugin),
