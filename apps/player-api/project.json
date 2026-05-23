@@ -1,0 +1,30 @@
+{
+  "name": "player-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/player-api/src",
+  "tags": ["type:app", "scope:player"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx watch --watch  src/main.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/player-api"],
+      "options": {
+        "command": "tsc -p apps/player-api/tsconfig.build.json"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node --enable-source-maps dist/apps/player-api/main.js"
+      }
+    }
+  }
+}
