@@ -1,0 +1,16 @@
+{
+  "name": "shared-kernels-time",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/kernels/time/src",
+  "projectType": "library",
+  "tags": ["type:shared"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/packages/shared/kernels/time"],
+      "options": {
+        "command": "npx tsc -p packages/shared/kernels/time/tsconfig.lib.json"
+      }
+    }
+  }
+}
