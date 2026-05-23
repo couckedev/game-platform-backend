@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Acceptance Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/acceptance/node_modules/.bin/tsx",
+      "args": [
+        "${workspaceFolder}/acceptance/node_modules/@cucumber/cucumber/bin/cucumber.js",
+        "--tags",
+        "@debug" 
+      ],
+      "cwd": "${workspaceFolder}/acceptance",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

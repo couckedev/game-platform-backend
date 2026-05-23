@@ -16,7 +16,7 @@ out/
 coverage/
 
 # Cucumber reports
-e2e/reports/
+apps/acceptance-tests/reports/
 
 # Environment files
 .env
@@ -38,6 +38,7 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+!.vscode/launch.json
 .idea/
 *.suo
 *.ntvs*
