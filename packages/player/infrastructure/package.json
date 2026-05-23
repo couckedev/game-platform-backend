@@ -1,0 +1,26 @@
+{
+  "name": "player-infrastructure",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "pg": "^8.20.0",
+    "player-application": "workspace:*",
+    "player-domain": "workspace:*",
+    "shared-kernels-time": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.20.0",
+    "shared-infrastructure": "workspace:*",
+    "drizzle-kit": "^0.31.10",
+    "vitest": "^4.1.4"
+  },
+  "private": true
+}
