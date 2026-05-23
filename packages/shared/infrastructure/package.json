@@ -1,0 +1,18 @@
+{
+  "name": "shared-infrastructure",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "private": true,
+  "dependencies": {
+    "shared-kernels-logging": "workspace:*",
+    "shared-kernels-time": "workspace:*",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "^10.0.0",
+    "@types/winston": "^2.4.4",
+    "vitest": "^4.1.4"
+  }
+}
