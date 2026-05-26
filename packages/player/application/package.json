@@ -1,0 +1,14 @@
+{
+  "name": "player-application",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "player-domain": "workspace:*",
+    "shared-kernels-time": "workspace:*",
+    "shared-kernels-logging": "workspace:*",
+    "@couckedev/ddd-core": "^2.2.0"
+  },
+  "private": true
+}

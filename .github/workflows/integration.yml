@@ -6,6 +6,10 @@ on:
 
 permissions:
   contents: read
+  packages: read
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   test:
@@ -16,16 +20,33 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "pnpm"
+          node-version: 24
+
+      - run: corepack enable
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm nx affected --target=test --base=origin/main --head=HEAD
+      - run: pnpm nx affected --target=test:unit --base=origin/main --head=HEAD
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - run: corepack enable
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm nx affected --target=test:integration --base=origin/main --head=HEAD
 
   lint:
     name: Lint
@@ -35,13 +56,30 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "pnpm"
+          node-version: 24
+
+      - run: corepack enable
 
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm nx affected --target=lint --base=origin/main --head=HEAD
+
+  acceptance-tests:
+    name: Acceptance Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - run: corepack enable
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm nx run acceptance-tests:run

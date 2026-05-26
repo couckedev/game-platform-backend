@@ -1,0 +1,24 @@
+{
+  "name": "player-infrastructure",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/player/infrastructure/src",
+  "projectType": "library",
+  "tags": ["type:infrastructure", "scope:player"],
+  "implicitDependencies": ["player-domain", "player-application", "shared-kernels-time", "shared-infrastructure"],
+  "targets": {
+    "test:integration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run test",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/packages/player/infrastructure"],
+      "options": {
+        "command": "npx tsc -p packages/player/infrastructure/tsconfig.lib.json"
+      }
+    }
+  }
+}

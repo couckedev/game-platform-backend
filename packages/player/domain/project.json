@@ -1,0 +1,24 @@
+{
+  "name": "player-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/player/domain/src",
+  "projectType": "library",
+  "tags": ["type:domain", "scope:player"],
+  "implicitDependencies": ["shared-kernels-time"],
+  "targets": {
+    "test:unit": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/packages/player/domain"],
+      "options": {
+        "command": "npx tsc -p packages/player/domain/tsconfig.lib.json"
+      }
+    }
+  }
+}

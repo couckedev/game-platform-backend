@@ -1,0 +1,20 @@
+{
+  "name": "acceptance-tests",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "run": "tsx node_modules/@cucumber/cucumber/bin/cucumber.js",
+    "dry-run": "tsx node_modules/@cucumber/cucumber/bin/cucumber.js --dry-run"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0",
+    "@couckedev/ddd-core": "^2.2.0",
+    "player-application": "workspace:*",
+    "player-infrastructure": "workspace:*",
+    "player-domain": "workspace:*",
+    "shared-infrastructure": "workspace:*",
+    "shared-kernels-time": "workspace:*"
+  }
+}

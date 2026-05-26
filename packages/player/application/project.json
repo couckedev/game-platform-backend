@@ -1,0 +1,17 @@
+{
+  "name": "player-application",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/player/application/src",
+  "projectType": "library",
+  "tags": ["type:application", "scope:player"],
+  "implicitDependencies": ["player-domain", "shared-kernels-time", "shared-kernels-logging"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/packages/player/application"],
+      "options": {
+        "command": "npx tsc -p packages/player/application/tsconfig.lib.json"
+      }
+    }
+  }
+}

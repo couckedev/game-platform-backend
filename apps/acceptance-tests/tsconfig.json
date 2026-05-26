@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "outDir": "../../dist/apps/acceptance-tests",
+    "types": ["node"]
+  },
+  "include": [
+    "support/**/*.ts",
+    "features/**/*.steps.ts"
+  ]
+}

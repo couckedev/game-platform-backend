@@ -1,0 +1,24 @@
+{
+  "name": "shared-infrastructure",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/infrastructure/src",
+  "projectType": "library",
+  "tags": ["type:shared"],
+  "implicitDependencies": ["shared-kernels-time"],
+  "targets": {
+    "test:integration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/packages/shared/infrastructure"],
+      "options": {
+        "command": "npx tsc -p packages/shared/infrastructure/tsconfig.lib.json"
+      }
+    }
+  }
+}

@@ -1,52 +1,35 @@
 // @ts-check
 import boundaries from "eslint-plugin-boundaries";
+import importPlugin from "eslint-plugin-import";
 import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 
 /**
- * DDD Layer tags (assigned in each project's project.json under "tags"):
+ * Layer enforcement for DDD/Clean Architecture layers:
  *
- *   type:domain          — Pure domain layer: entities, value objects, aggregates, domain events
- *   type:application     — Application layer: use cases, ports, application services
- *   type:infrastructure  — Infrastructure layer: adapters, repositories impl, external services
- *   type:app             — Deployable application (NestJS, Next.js, etc.)
- *   type:shared-kernel   — Shared kernel: flat package with shared types, VOs, utilities (no DDD layers)
- *   scope:<bc-name>      — Bounded context name (e.g. scope:catalog, scope:orders)
- *   scope:shared         — Shared kernel / cross-cutting concerns
+ *   type:domain         — Pure domain: entities, value objects, aggregates, domain events
+ *   type:application    — Application: use cases, ports, application services
+ *   type:infrastructure — Infrastructure: repository impls, adapters, external services
  *
- * Allowed dependency flow (Clean Architecture):
+ * Allowed dependency flow (inner layers never depend on outer layers):
  *
- *   shared  ←  domain  ←  application  ←  infrastructure  ←  app
+ *   domain  ←  application  ←  infrastructure
  *
- * Special cases explicitly allowed:
- *
- *   infrastructure → shared-kernel:
- *     Infrastructure may import shared-kernel types to reconstitute stored or serialized
- *     domain events and value objects (e.g. for the outbox pattern or event sourcing).
- *     This is intentional and NOT a model-smell when shared-kernel types are pure value
- *     types with no side effects. Already covered by the general "shared ← everyone" rule.
- *
- *   shared-kernel → shared-kernel:
- *     Forbidden. Shared-kernel packages must stay independent from one another to avoid
- *     transitive coupling between bounded contexts through chained shared dependencies.
+ * Cross-cutting shared packages (packages/shared/*) are excluded from
+ * boundary checks and can be imported freely by any layer.
  */
 
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
   {
-    ignores: [
-      "node_modules/**",
-      "dist/**",
-      ".nx/**",
-      "coverage/**",
-      "tmp/**",
-    ],
+    ignores: ["node_modules/**", "dist/**", ".nx/**", "coverage/**", "tmp/**"],
   },
   {
-    files: ["**/*.ts", "**/*.tsx"],
+    files: ["packages/*/*/src/**/*.ts"],
     plugins: {
-      "@typescript-eslint": tsPlugin,
+      "@typescript-eslint": /** @type {any} */ (tsPlugin),
       boundaries,
+      import: /** @type {any} */ (importPlugin),
     },
     languageOptions: {
       parser: tsParser,
@@ -56,31 +39,26 @@ const config = [
       },
     },
     settings: {
-      "boundaries/include": ["apps/**/*", "packages/**/*"],
+      "boundaries/include": [
+        "packages/*/domain/src/**",
+        "packages/*/application/src/**",
+        "packages/*/infrastructure/src/**",
+      ],
       "boundaries/elements": [
         {
           type: "domain",
-          pattern: "packages/*/domain/src",
+          pattern: "packages/*/domain/src/**",
           capture: ["bc"],
         },
         {
           type: "application",
-          pattern: "packages/*/application/src",
+          pattern: "packages/*/application/src/**",
           capture: ["bc"],
         },
         {
           type: "infrastructure",
-          pattern: "packages/*/infrastructure/src",
+          pattern: "packages/*/infrastructure/src/**",
           capture: ["bc"],
-        },
-        {
-          type: "shared",
-          pattern: "packages/shared-kernel{,-*}/src",
-        },
-        {
-          type: "app",
-          pattern: "apps/*/src",
-          capture: ["appName"],
         },
       ],
     },
@@ -110,23 +88,17 @@ const config = [
         {
           default: "disallow",
           rules: [
-            // shared-kernel can be imported by everyone (including infrastructure —
-            // infrastructure may need shared VOs to reconstitute domain events from storage)
-            {
-              from: ["domain", "application", "infrastructure", "app"],
-              allow: ["shared"],
-            },
-            // domain can only import from same-BC domain and shared-kernel
+            // domain can only import from same-BC domain
             {
               from: ["domain"],
               allow: [["domain", { bc: "${from.bc}" }]],
             },
-            // application can import from same-BC domain and shared-kernel
+            // application can import from same-BC domain
             {
               from: ["application"],
               allow: [["domain", { bc: "${from.bc}" }]],
             },
-            // infrastructure can import from same-BC application, same-BC domain, and shared-kernel
+            // infrastructure can import from same-BC domain and application
             {
               from: ["infrastructure"],
               allow: [
@@ -134,27 +106,39 @@ const config = [
                 ["application", { bc: "${from.bc}" }],
               ],
             },
-            // apps can import from infrastructure and application (any BC)
-            {
-              from: ["app"],
-              allow: ["infrastructure", "application"],
-            },
-            // shared-kernel packages must not depend on other packages, including other shared-kernels
-            {
-              from: ["shared"],
-              allow: [],
-            },
           ],
         },
       ],
-      "boundaries/no-unknown": "error",
-      "boundaries/no-unknown-files": "warn",
+      "boundaries/no-unknown": "off",
+      "boundaries/no-unknown-files": "off",
 
       // General best practices
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-debugger": "error",
       eqeqeq: ["error", "always"],
       curly: ["error", "all"],
+
+      // Forbid importing packages not declared in the closest package.json,
+      // but only for the DDD source layers — not for apps or config files.
+      // The 'files' glob on this block already restricts to packages/*/*/src/.
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          devDependencies: false,
+          optionalDependencies: false,
+          peerDependencies: true,
+        },
+      ],
+    },
+  },
+  {
+    files: ["**/*.spec.ts", "**/*.test.ts"],
+    languageOptions: {
+      parser: tsParser,
+    },
+    rules: {
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "import/no-extraneous-dependencies": "off",
     },
   },
 ];

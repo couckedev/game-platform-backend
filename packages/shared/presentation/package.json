@@ -1,0 +1,26 @@
+{
+  "name": "shared-presentation",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "private": true,
+  "dependencies": {
+    "shared-infrastructure": "workspace:*",
+    "@couckedev/ddd-core": "^2.2.0",
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.4",
+    "@nestjs/passport": "^11.0.5",
+    "@nestjs/swagger": "^11.4.2",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/winston": "^2.4.4",
+    "drizzle-orm": "^0.45.2",
+    "fastify": "^5.0.0",
+    "jwks-rsa": "^4.0.1",
+    "nest-winston": "^1.10.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "winston": "^3.19.0"
+  }
+}
