@@ -5,8 +5,14 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
+      publish_type:
+        description: 'Publish type'
+        required: false
+        type: choice
+        options: [unstable, stable]
+        default: unstable
       apps:
-        description: 'Apps to publish (JSON array, e.g. ["api-gateway","backoffice"])'
+        description: 'Apps to publish (JSON array, e.g. ["player-api"])'
         required: false
         type: string
       app:
@@ -19,13 +25,17 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: read
+
 jobs:
-  detect-affected-apps:
-    name: Detect apps to publish
+  detect:
+    name: Detect apps & publish type
     runs-on: ubuntu-latest
     outputs:
       apps: ${{ steps.resolve.outputs.apps }}
       has_apps: ${{ steps.resolve.outputs.has_apps }}
+      publish_type: ${{ steps.type.outputs.publish_type }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,6 +49,18 @@ jobs:
           cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Detect publish type
+        id: type
+        run: |
+          if [ -n "${{ inputs.publish_type }}" ]; then
+            TYPE="${{ inputs.publish_type }}"
+          elif [[ "${{ github.event.head_commit.message }}" == "chore: version packages"* ]]; then
+            TYPE="stable"
+          else
+            TYPE="unstable"
+          fi
+          echo "publish_type=$TYPE" >> $GITHUB_OUTPUT
 
       - name: Resolve apps
         id: resolve
@@ -60,13 +82,13 @@ jobs:
           fi
 
   build-and-push:
-    name: Build ${{ matrix.app }}
-    needs: detect-affected-apps
-    if: needs.detect-affected-apps.outputs.has_apps == 'true'
+    name: Build ${{ matrix.app }} (${{ needs.detect.outputs.publish_type }})
+    needs: detect
+    if: needs.detect.outputs.has_apps == 'true'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app: ${{ fromJson(needs.detect-affected-apps.outputs.apps) }}
+        app: ${{ fromJson(needs.detect.outputs.apps) }}
     permissions:
       contents: read
       packages: write
@@ -79,18 +101,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract version
-        id: version
+      - name: Compute tags
+        id: tags
         run: |
-          VERSION=$(node -p "require('./apps/${{ matrix.app }}/package.json').version")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          PUBLISH_TYPE="${{ needs.detect.outputs.publish_type }}"
+          REGISTRY="ghcr.io/${{ github.repository }}"
+          APP="${{ matrix.app }}"
+          if [ "$PUBLISH_TYPE" = "stable" ]; then
+            VERSION=$(node -p "require('./apps/$APP/package.json').version")
+            echo "tags=$REGISTRY/$APP:$VERSION,$REGISTRY/$APP:latest" >> $GITHUB_OUTPUT
+            echo "check_tag=$VERSION" >> $GITHUB_OUTPUT
+          else
+            SHA="${GITHUB_SHA::7}"
+            echo "tags=$REGISTRY/$APP:sha-$SHA,$REGISTRY/$APP:unstable" >> $GITHUB_OUTPUT
+            echo "check_tag=sha-$SHA" >> $GITHUB_OUTPUT
+          fi
 
       - name: Check if image already exists
         id: check
         continue-on-error: true
         run: |
-          docker manifest inspect ghcr.io/${{ github.repository }}/${{ matrix.app }}:${{ steps.version.outputs.version }} > /dev/null 2>&1
-          if [ $? -eq 0 ]; then
+          if docker manifest inspect ghcr.io/${{ github.repository }}/${{ matrix.app }}:${{ steps.tags.outputs.check_tag }} > /dev/null 2>&1; then
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
@@ -102,6 +133,4 @@ jobs:
           context: .
           file: ./apps/${{ matrix.app }}/Dockerfile
           push: true
-          tags: |
-            ghcr.io/${{ github.repository }}/${{ matrix.app }}:${{ steps.version.outputs.version }}
-            ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
+          tags: ${{ steps.tags.outputs.tags }}
