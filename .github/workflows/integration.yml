@@ -6,6 +6,10 @@ on:
 
 permissions:
   contents: read
+  packages: read
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   test:
@@ -20,7 +24,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile
@@ -39,9 +43,28 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm nx affected --target=lint --base=origin/main --head=HEAD
+
+  acceptance-tests:
+    name: Acceptance Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm nx run acceptance-tests:run
