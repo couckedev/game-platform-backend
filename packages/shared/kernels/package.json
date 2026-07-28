@@ -1,0 +1,9 @@
+{
+  "name": "@shared/kernels",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./time": "./src/time/index.ts"
+  }
+}

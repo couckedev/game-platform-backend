@@ -1,0 +1,50 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+
+  "files": {
+    "includes": [
+      "**",
+      "!.nx",
+      "!**/dist",
+      "!!coverage",
+      "!apps/acceptance-tests/reports",
+      "!**/.stryker-tmp",
+      "!**/reports",
+      "!**/coverage",
+      "!static",
+      "!**/*.svg"
+    ]
+  },
+
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    },
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
+  },
+
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+
+  "html": {
+    "experimentalFullSupportEnabled": true
+  }
+}

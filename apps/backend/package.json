@@ -1,0 +1,24 @@
+{
+  "name": "@game-platform/backend",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@shared/infrastructure": "workspace:*",
+    "@fastify/static": "catalog:",
+    "@nestjs/common": "catalog:",
+    "@nestjs/config": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/platform-fastify": "catalog:",
+    "@nestjs/swagger": "catalog:",
+    "class-transformer": "catalog:",
+    "class-validator": "catalog:",
+    "drizzle-orm": "catalog:",
+    "fastify": "catalog:",
+    "pg": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rxjs": "catalog:",
+    "tslib": "catalog:",
+    "uuid": "catalog:",
+    "winston": "catalog:"
+  }
+}

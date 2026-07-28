@@ -1,0 +1,7 @@
+.git
+.github
+.nx
+.stryker-tmp
+coverage
+node_modules
+deploy-test

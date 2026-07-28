@@ -1,0 +1,15 @@
+{
+  "name": "player-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/player/domain/src",
+  "projectType": "library",
+  "tags": ["layer:domain", "scope:player"],
+  "implicitDependencies": [],
+
+  "targets": {
+    "test": {},
+    "test:mutation": {},
+    "test:coverage": {},
+    "typecheck": {}
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "shared-infrastructure",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/infrastructure/src",
+  "projectType": "library",
+  "targets": {
+    "test": {}
+  },
+  "tags": ["type:library"]
+}

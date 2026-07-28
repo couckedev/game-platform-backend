@@ -1,0 +1,17 @@
+name: Setup Project
+
+runs:
+  using: composite
+
+  steps:
+    - uses: pnpm/action-setup@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        cache: pnpm
+        registry-url: https://npm.pkg.github.com
+
+    - run: pnpm install --frozen-lockfile
+      shell: bash
+      env:
+        NODE_AUTH_TOKEN: ${{ github.token }}

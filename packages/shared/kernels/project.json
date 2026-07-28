@@ -1,0 +1,17 @@
+{
+  "name": "shared-kernels",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+
+  "sourceRoot": "packages/shared/kernels/src",
+
+  "projectType": "library",
+
+  "tags": ["layer:domain", "scope:shared"],
+
+  "targets": {
+    "test": {},
+    "test:mutation": {},
+    "test:coverage": {},
+    "typecheck": {}
+  }
+}
