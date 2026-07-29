@@ -17,7 +17,7 @@ describe(HttpPlayerRegistrationView, () => {
 
     view.render(viewModel);
 
-    expect(renderedResponse).toStrictEqual({ statusCode: 201 });
+    expect(renderedResponse).toStrictEqual({ statusCode: 201, body: {} });
   });
 
   it("renders 422 http response with NICKNAME_TOO_SHORT reason  if view model is { status: 'FAILURE', rejectionReason: 'NICKNAME_TOO_SHORT' }", () => {
@@ -37,7 +37,9 @@ describe(HttpPlayerRegistrationView, () => {
 
     expect(renderedResponse).toStrictEqual({
       statusCode: 422,
-      rejectionReason: 'NICKNAME_TOO_SHORT',
+      body: {
+        rejectionReason: 'NICKNAME_TOO_SHORT',
+      },
     });
   });
 });

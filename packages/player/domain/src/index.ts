@@ -1,2 +1,1 @@
-export * from './errors';
-export * from './value-objects';
+export default {};
