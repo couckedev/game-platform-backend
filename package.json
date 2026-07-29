@@ -15,22 +15,26 @@
   },
   "packageManager": "pnpm@10.34.5",
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "catalog:",
     "@fastify/static": "catalog:",
     "@nestjs/common": "catalog:",
     "@nestjs/config": "catalog:",
     "@nestjs/core": "catalog:",
     "@nestjs/platform-fastify": "catalog:",
-    "@nestjs/swagger": "catalog:",
     "class-transformer": "catalog:",
     "class-validator": "catalog:",
     "fastify": "catalog:",
     "reflect-metadata": "catalog:",
     "rxjs": "catalog:",
     "tslib": "catalog:",
-    "winston": "catalog:"
+    "winston": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
+    "dependency-cruiser": "catalog:",
     "@biomejs/biome": "catalog:",
+    "@fastify/swagger": "catalog:",
+    "@fastify/swagger-ui": "catalog:",
     "@nx/esbuild": "catalog:",
     "@nx/js": "catalog:",
     "@nx/node": "catalog:",
@@ -45,8 +49,9 @@
     "drizzle-kit": "catalog:",
     "esbuild": "catalog:",
     "nx": "catalog:",
+    "openapi-types": "catalog:",
     "tsx": "catalog:",
-    "typescript": "^6.0.3",
+    "typescript": "catalog:",
     "vitest": "catalog:"
   }
 }

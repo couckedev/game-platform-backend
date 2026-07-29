@@ -34,6 +34,14 @@
       },
       "dependsOn": ["build", "^build"]
     },
+    "test:watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest",
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["build", "^build"]
+    },
     "test:mutation": {
       "executor": "nx:run-commands",
       "options": {

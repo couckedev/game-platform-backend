@@ -32,7 +32,6 @@ const LAYERS = {
   APPLICATION: 'application',
   INTERFACE_ADAPTERS: 'interface-adapters',
   INFRASTRUCTURE: 'infrastructure',
-  UI: 'ui',
 };
 
 const ALLOWED_DEPENDENCIES = {

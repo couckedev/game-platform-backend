@@ -4,7 +4,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./features/*": "./src/features/*/index.ts"
+    "./features/*": "./src/features/*/index.ts",
+    "./view-models": "./src/view-models/index.ts"
   },
   "dependencies": {
     "@player/application": "workspace:*"

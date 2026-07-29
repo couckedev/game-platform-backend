@@ -20,6 +20,14 @@
       }
     },
 
+    "generate-openapi": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx --tsconfig tsconfig.json scripts/generate-openapi-spec.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
+
     "start": {
       "executor": "nx:run-commands",
       "options": {

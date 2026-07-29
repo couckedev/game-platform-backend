@@ -54,3 +54,5 @@ temp/
 **/reports/
 vite.config.*.timestamp*
 
+#OpenAPI
+**/openapi.json

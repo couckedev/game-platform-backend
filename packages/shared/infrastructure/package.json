@@ -4,7 +4,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./nestjs": "./src/nestjs/index.ts"
+    "./nestjs": "./src/nestjs/index.ts",
+    "./openapi": "./src/openapi/index.ts"
   },
   "dependencies": {
     "@shared/kernels": "workspace:*"
