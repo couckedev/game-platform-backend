@@ -31,4 +31,17 @@ describe('Player registration', () => {
       rejectionReason: 'NICKNAME_TOO_SHORT',
     });
   });
+
+  it.each([
+    { nickname: '012345678901234567890' },
+    { nickname: '0123456789012345678901' },
+    { nickname: '01234567890123456789012' },
+  ])('fails if nickname is longer than 20 characters', ({ nickname }) => {
+    const viewModel = playerTestingModule.registerPlayer(nickname);
+
+    expect(viewModel).toStrictEqual({
+      status: 'FAILURE',
+      rejectionReason: 'NICKNAME_TOO_LONG',
+    });
+  });
 });

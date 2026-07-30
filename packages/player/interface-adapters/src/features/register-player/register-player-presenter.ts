@@ -5,14 +5,7 @@ export class RegisterPlayerPresenter {
   private _viewModel: PlayerRegistrationViewModel | undefined;
 
   present(outputData: RegisterPlayerOutputData) {
-    if (outputData.status === 'FAILURE') {
-      this._viewModel = {
-        status: 'FAILURE',
-        rejectionReason: 'NICKNAME_TOO_SHORT',
-      };
-    } else {
-      this._viewModel = { status: 'SUCCESS' };
-    }
+    this._viewModel = outputData;
   }
 
   get viewModel(): PlayerRegistrationViewModel {

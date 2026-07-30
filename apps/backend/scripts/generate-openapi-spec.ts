@@ -1,4 +1,5 @@
 import { writeFileSync } from 'node:fs';
+import { playerModuleRegistry } from '@player/infrastructure/openapi';
 import {
   generateOpenAPI,
   sharedModuleRegistry,
@@ -6,6 +7,7 @@ import {
 
 const document = generateOpenAPI(
   sharedModuleRegistry,
+  playerModuleRegistry,
   // authRegistry,
   // inventoryRegistry,
 );
