@@ -1,7 +1,11 @@
 import z from 'zod';
 
 export const httpRegisterPlayerFailureResponseBody = z.object({
-  rejectionReason: z.enum(['NICKNAME_TOO_SHORT', 'NICKNAME_TOO_LONG']),
+  rejectionReason: z.enum([
+    'NICKNAME_TOO_SHORT',
+    'NICKNAME_TOO_LONG',
+    'NICKNAME_TOO_FEW_LETTERS',
+  ]),
 });
 export const httpRegisterPlayerFailureResponse = z.union([
   z.object({

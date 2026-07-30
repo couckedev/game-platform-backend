@@ -65,4 +65,27 @@ describe(HttpPlayerRegistrationView, () => {
       },
     });
   });
+
+  it("renders 422 http response with NICKNAME_TOO_FEW_LETTERS reason  if view model is { status: 'FAILURE', rejectionReason: 'NICKNAME_TOO_FEW_LETTERS' }", () => {
+    const viewModel: PlayerRegistrationViewModel = {
+      status: 'FAILURE',
+      rejectionReason: 'NICKNAME_TOO_FEW_LETTERS',
+    };
+    let renderedResponse: HttpPlayerRegistrationResponse | null = null;
+    const fakeRenderer: Renderer<HttpPlayerRegistrationResponse> = (
+      response: HttpPlayerRegistrationResponse,
+    ) => {
+      renderedResponse = response;
+    };
+    const view = new HttpPlayerRegistrationView(fakeRenderer);
+
+    view.render(viewModel);
+
+    expect(renderedResponse).toStrictEqual({
+      statusCode: 422,
+      body: {
+        rejectionReason: 'NICKNAME_TOO_FEW_LETTERS',
+      },
+    });
+  });
 });

@@ -17,21 +17,11 @@ export class HttpPlayerRegistrationView
       });
       return;
     }
-    if (viewModel.rejectionReason === 'NICKNAME_TOO_SHORT') {
-      this.renderHttpResponse({
-        statusCode: 422,
-        body: {
-          rejectionReason: 'NICKNAME_TOO_SHORT',
-        },
-      });
-    }
-    if (viewModel.rejectionReason === 'NICKNAME_TOO_LONG') {
-      this.renderHttpResponse({
-        statusCode: 422,
-        body: {
-          rejectionReason: 'NICKNAME_TOO_LONG',
-        },
-      });
-    }
+    this.renderHttpResponse({
+      statusCode: 422,
+      body: {
+        rejectionReason: viewModel.rejectionReason,
+      },
+    });
   }
 }
