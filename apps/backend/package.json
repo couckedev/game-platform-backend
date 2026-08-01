@@ -3,7 +3,23 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/platform-fastify": "catalog:",
     "@player/infrastructure": "workspace:*",
-    "@shared/infrastructure": "workspace:*"
+    "@shared/infrastructure": "workspace:*",
+    "fastify": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rxjs": "catalog:",
+    "jose": "catalog:",
+    "drizzle-orm": "catalog:",
+    "winston": "catalog:",
+    "zod": "catalog:",
+    "@fastify/swagger": "catalog:"
+  },
+  "devDependencies": {
+    "@fastify/swagger": "catalog:",
+    "@fastify/swagger-ui": "catalog:",
+    "@asteasolutions/zod-to-openapi": "catalog:"
   }
 }

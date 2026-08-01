@@ -1,5 +1,10 @@
-import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
-import { ZodValidationPipe } from '@shared/infrastructure/nestjs';
+import { Body, Controller, Inject, Post, Res, UseGuards } from '@nestjs/common';
+import type { Logger as LoggerType } from '@shared/infrastructure';
+import {
+  Logger,
+  NestHttpAuthenticationGuard,
+  ZodValidationPipe,
+} from '@shared/infrastructure/nestjs';
 import type { FastifyReply } from 'fastify';
 import type { RegisterPlayerFeature as RegisterPlayerFeatureType } from '../../composition/types';
 import {
@@ -14,20 +19,27 @@ export class NestPlayerController {
   constructor(
     @Inject(RegisterPlayerFeature)
     private readonly registerPlayerFeature: RegisterPlayerFeatureType,
+    @Inject(Logger) private readonly logger: LoggerType,
   ) {}
 
   @Post()
-  register(
+  @UseGuards(NestHttpAuthenticationGuard)
+  async register(
     @Body(new ZodValidationPipe(httpRegisterPlayerRequestSchema))
     registerPlayerRequest: HttpRegisterPlayerRequest,
     @Res() fastifyResponseSender: FastifyReply,
-  ): void {
-    const viewModel = this.registerPlayerFeature(
+  ): Promise<void> {
+    const viewModel = await this.registerPlayerFeature(
       registerPlayerRequest.nickname,
     );
     const view = new HttpPlayerRegistrationView((input) =>
       fastifyResponseSender.status(input.statusCode).send(input.body),
     );
     view.render(viewModel);
+    if (viewModel.status === 'FAILURE') {
+      this.logger.warning('Player registration failed', {
+        reason: viewModel.rejectionReason,
+      });
+    }
   }
 }

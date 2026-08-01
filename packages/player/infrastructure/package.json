@@ -13,5 +13,8 @@
   "dependencies": {
     "@player/interface-adapters": "workspace:*",
     "@shared/infrastructure": "workspace:*"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "catalog:"
   }
 }

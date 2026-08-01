@@ -1,7 +1,9 @@
-import type { HttpResponse } from '../../http';
+import type { DatabaseClient } from '../../database/drizzle';
+import type { HttpAuthenticationGuard } from '../../http/common';
 import type { Logger } from '../../logging/common';
-import type { Renderer } from '../../rendering/common';
 
 export interface SharedModule {
+  httpAuthenticationGuard: HttpAuthenticationGuard;
   logger: Logger;
+  databaseClient: DatabaseClient;
 }

@@ -3,7 +3,7 @@
     "target": "es2022",
     "module": "preserve",
     "moduleResolution": "bundler", // lit le champ exports des package.json
-    "lib": ["es2022", "dom"],
+    "lib": ["es2022", "esnext", "dom"],
     "strict": true,
     "noImplicitOverride": true,
     "forceConsistentCasingInFileNames": true,

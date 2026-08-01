@@ -38,7 +38,7 @@
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",
-      "dependsOn": ["build"],
+      "dependsOn": ["build", "generate-openapi"],
       "options": {
         "buildTarget": "backend:build",
         "runBuildTargetDependencies": true

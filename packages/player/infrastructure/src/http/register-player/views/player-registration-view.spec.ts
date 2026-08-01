@@ -111,4 +111,27 @@ describe(HttpPlayerRegistrationView, () => {
       },
     });
   });
+
+  it("renders 409 http response with NICKNAME_ALREADY_TAKEN reason if view model is { status: 'FAILURE', rejectionReason: 'NICKNAME_ALREADY_TAKEN' }", () => {
+    const viewModel: PlayerRegistrationViewModel = {
+      status: 'FAILURE',
+      rejectionReason: 'NICKNAME_ALREADY_TAKEN',
+    };
+    let renderedResponse: HttpPlayerRegistrationResponse | null = null;
+    const fakeRenderer: Renderer<HttpPlayerRegistrationResponse> = (
+      response: HttpPlayerRegistrationResponse,
+    ) => {
+      renderedResponse = response;
+    };
+    const view = new HttpPlayerRegistrationView(fakeRenderer);
+
+    view.render(viewModel);
+
+    expect(renderedResponse).toStrictEqual({
+      statusCode: 409,
+      body: {
+        rejectionReason: 'NICKNAME_ALREADY_TAKEN',
+      },
+    });
+  });
 });

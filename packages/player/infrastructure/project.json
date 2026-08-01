@@ -12,6 +12,20 @@
   ],
   "targets": {
     "test": {},
-    "test:watch": {}
+    "test:watch": {},
+    "database:migration:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "drizzle-kit generate --config=drizzle.config.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "database:migration:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "drizzle-kit migrate --config=drizzle.config.mjs",
+        "cwd": "{projectRoot}"
+      }
+    }
   }
 }

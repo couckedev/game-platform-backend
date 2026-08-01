@@ -1,8 +1,9 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import {
-  httpRegisterPlayerFailureResponseBody,
+  httpRegisterPlayerConflictResponseBody,
   httpRegisterPlayerRequestSchema,
   httpRegisterPlayerSuccessResponseBody,
+  httpRegisterPlayerUnprocessableEntityResponseBody,
 } from '../http/register-player';
 
 export const playerModuleRegistry = new OpenAPIRegistry();
@@ -11,6 +12,7 @@ playerModuleRegistry.registerPath({
   method: 'post',
   path: '/players',
   summary: 'Register a player',
+  security: [{ keycloak: [] }],
   request: {
     body: {
       content: {
@@ -30,10 +32,18 @@ playerModuleRegistry.registerPath({
       },
     },
     422: {
-      description: 'Player registration failure',
+      description: 'Player registration unprocessable entity error',
       content: {
         'application/json': {
-          schema: httpRegisterPlayerFailureResponseBody,
+          schema: httpRegisterPlayerUnprocessableEntityResponseBody,
+        },
+      },
+    },
+    409: {
+      description: 'Player registration conflict error',
+      content: {
+        'application/json': {
+          schema: httpRegisterPlayerConflictResponseBody,
         },
       },
     },

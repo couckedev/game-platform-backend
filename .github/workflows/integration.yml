@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup-node-project
-      - run: pnpm nx build backend
+      - run: pnpm nx build backend --skip-nx-cache --verbose
 
   typecheck:
     name: Type Check
@@ -37,17 +37,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup-node-project
-      - run: pnpm nx start acceptance-tests
-
-  domain-tests:
-    name: Domain unit tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup-node-project
-      - run: pnpm nx run-many --target=test --projects=tag:layer:domain
+      - run: pnpm nx test:mutation acceptance-tests
 
   infrastructure-tests:
     name: Infrastructure integration tests

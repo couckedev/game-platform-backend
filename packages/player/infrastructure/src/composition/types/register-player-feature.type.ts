@@ -2,4 +2,4 @@ import type { PlayerRegistrationViewModel } from '@player/interface-adapters/vie
 
 export type RegisterPlayerFeature = (
   nickname: string,
-) => PlayerRegistrationViewModel;
+) => Promise<PlayerRegistrationViewModel>;

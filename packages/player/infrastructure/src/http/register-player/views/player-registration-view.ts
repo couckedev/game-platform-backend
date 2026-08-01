@@ -17,11 +17,23 @@ export class HttpPlayerRegistrationView
       });
       return;
     }
-    this.renderHttpResponse({
-      statusCode: 422,
-      body: {
-        rejectionReason: viewModel.rejectionReason,
-      },
-    });
+    if (viewModel.status === 'FAILURE') {
+      if (viewModel.rejectionReason === 'NICKNAME_ALREADY_TAKEN') {
+        this.renderHttpResponse({
+          statusCode: 409,
+          body: {
+            rejectionReason: viewModel.rejectionReason,
+          },
+        });
+        return;
+      }
+
+      this.renderHttpResponse({
+        statusCode: 422,
+        body: {
+          rejectionReason: viewModel.rejectionReason,
+        },
+      });
+    }
   }
 }

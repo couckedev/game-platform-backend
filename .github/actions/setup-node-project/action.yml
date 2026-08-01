@@ -8,6 +8,7 @@ runs:
 
     - uses: actions/setup-node@v4
       with:
+        node-version: 26
         cache: pnpm
         registry-url: https://npm.pkg.github.com
 
