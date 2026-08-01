@@ -1,4 +1,5 @@
 import {
+  NicknameContainsForbiddenCharactersError,
   NicknameTooFewLettersError,
   NicknameTooLongError,
   NicknameTooShortError,
@@ -24,6 +25,10 @@ export class Nickname {
     if (nicknameLetterCount < Nickname.MINIMUM_LETTERS_COUNT) {
       throw new NicknameTooFewLettersError(value);
     }
+    const allowedCharactersRegex =
+      /^[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-_]+$/;
+    if (!allowedCharactersRegex.test(value))
+      throw new NicknameContainsForbiddenCharactersError(value);
     return new Nickname(value);
   }
 }

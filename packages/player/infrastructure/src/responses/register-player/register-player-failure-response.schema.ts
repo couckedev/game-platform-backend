@@ -5,6 +5,7 @@ export const registerPlayerFailureResponseSchema = z.object({
     'NICKNAME_TOO_LONG',
     'NICKNAME_TOO_SHORT',
     'NICKNAME_TOO_FEW_LETTERS',
+    'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS',
   ]),
   errorMessage: z.string(),
 });

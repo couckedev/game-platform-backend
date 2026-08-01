@@ -60,4 +60,20 @@ describe('Player registration', () => {
       });
     },
   );
+
+  it.each([
+    { nickname: 'abcdefù' },
+    { nickname: 'abc123_-$*ù' },
+    { nickname: 'abc123./:!' },
+  ])(
+    'fails if nickname contain does not contain only letters, digits, hyphens and underscores',
+    ({ nickname }) => {
+      const viewModel = playerTestingModule.registerPlayer(nickname);
+
+      expect(viewModel).toStrictEqual({
+        status: 'FAILURE',
+        rejectionReason: 'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS',
+      });
+    },
+  );
 });
