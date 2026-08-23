@@ -1,3 +1,4 @@
+export * from './authentication/common';
 export * from './database/common';
 export * from './database/drizzle';
 export * from './database/pg';

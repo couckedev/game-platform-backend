@@ -11,8 +11,12 @@ describe('Player registration', () => {
 
   it('succeeds if player registration request is valid', async () => {
     const nickname = 'nickname';
+    const externalAccountId = 'external-account-id';
 
-    const viewModel = await playerTestingModule.registerPlayer(nickname);
+    const viewModel = await playerTestingModule.registerPlayer(
+      nickname,
+      externalAccountId,
+    );
 
     expect(viewModel).toStrictEqual({ status: 'SUCCESS' });
   });
@@ -24,7 +28,12 @@ describe('Player registration', () => {
     { nickname: 'nic' },
     { nickname: 'nick' },
   ])('fails if nickname is shorter than 5 characters', async ({ nickname }) => {
-    const viewModel = await playerTestingModule.registerPlayer(nickname);
+    const externalAccountId = 'external-account-id';
+
+    const viewModel = await playerTestingModule.registerPlayer(
+      nickname,
+      externalAccountId,
+    );
 
     expect(viewModel).toStrictEqual({
       status: 'FAILURE',
@@ -37,7 +46,12 @@ describe('Player registration', () => {
     { nickname: '0123456789012345678901' },
     { nickname: '01234567890123456789012' },
   ])('fails if nickname is longer than 20 characters', async ({ nickname }) => {
-    const viewModel = await playerTestingModule.registerPlayer(nickname);
+    const externalAccountId = 'external-account-id';
+
+    const viewModel = await playerTestingModule.registerPlayer(
+      nickname,
+      externalAccountId,
+    );
 
     expect(viewModel).toStrictEqual({
       status: 'FAILURE',
@@ -52,7 +66,12 @@ describe('Player registration', () => {
   ])(
     'fails if nickname does not contain 3 letters at least',
     async ({ nickname }) => {
-      const viewModel = await playerTestingModule.registerPlayer(nickname);
+      const externalAccountId = 'external-account-id';
+
+      const viewModel = await playerTestingModule.registerPlayer(
+        nickname,
+        externalAccountId,
+      );
 
       expect(viewModel).toStrictEqual({
         status: 'FAILURE',
@@ -68,7 +87,12 @@ describe('Player registration', () => {
   ])(
     'fails if nickname contain does not contain only letters, digits, hyphens and underscores',
     async ({ nickname }) => {
-      const viewModel = await playerTestingModule.registerPlayer(nickname);
+      const externalAccountId = 'external-account-id';
+
+      const viewModel = await playerTestingModule.registerPlayer(
+        nickname,
+        externalAccountId,
+      );
 
       expect(viewModel).toStrictEqual({
         status: 'FAILURE',
@@ -78,11 +102,17 @@ describe('Player registration', () => {
   );
 
   it('fails if nickname is already taken by another player', async () => {
+    const externalAccountId = 'external-account-id';
     const existingNickname = 'nickname';
-    await playerTestingModule.registerPlayer(existingNickname);
+    await playerTestingModule.registerPlayer(
+      existingNickname,
+      externalAccountId,
+    );
 
-    const viewModel =
-      await playerTestingModule.registerPlayer(existingNickname);
+    const viewModel = await playerTestingModule.registerPlayer(
+      existingNickname,
+      externalAccountId,
+    );
     expect(viewModel).toStrictEqual({
       status: 'FAILURE',
       rejectionReason: 'NICKNAME_ALREADY_TAKEN',

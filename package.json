@@ -30,6 +30,7 @@
     "reflect-metadata": "catalog:",
     "rxjs": "catalog:",
     "tslib": "catalog:",
+    "uuid": "catalog:",
     "winston": "catalog:",
     "zod": "catalog:"
   },

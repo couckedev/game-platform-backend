@@ -1,4 +1,6 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
+import { httpAuthenticatePlayerRequestSchema } from '../http/authenticate-player/requests';
+import { httpAuthenticatePlayerFoundResponse } from '../http/authenticate-player/responses';
 import {
   httpRegisterPlayerConflictResponseBody,
   httpRegisterPlayerRequestSchema,
@@ -7,6 +9,32 @@ import {
 } from '../http/register-player';
 
 export const playerModuleRegistry = new OpenAPIRegistry();
+
+playerModuleRegistry.registerPath({
+  method: 'get',
+  path: '/players/me',
+  summary: 'Authenticate a player',
+  security: [{ keycloak: [] }],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: httpAuthenticatePlayerRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Current player found',
+      content: {
+        'application/json': {
+          schema: httpAuthenticatePlayerFoundResponse,
+        },
+      },
+    },
+  },
+});
 
 playerModuleRegistry.registerPath({
   method: 'post',

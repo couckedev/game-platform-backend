@@ -10,4 +10,4 @@ export const reservedNicknamesTable = pgTable('reserved_nicknames', {
     .unique(RESERVED_NICKNAMES_TABLE_CONSTRAINTS.uniqueNickname),
 });
 
-export type PlayerRow = typeof reservedNicknamesTable.$inferSelect;
+export type ReservedNicknameRow = typeof reservedNicknamesTable.$inferSelect;

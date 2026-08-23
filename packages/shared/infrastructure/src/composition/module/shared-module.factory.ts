@@ -19,5 +19,6 @@ export function createSharedModule(config: SharedModuleConfig): SharedModule {
     httpAuthenticationGuard,
     logger: createWinstonLogger(config.logger),
     databaseClient: createDrizzleClient(config.database),
+    identityVerifier,
   };
 }

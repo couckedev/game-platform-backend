@@ -31,4 +31,8 @@ export class Nickname {
       throw new NicknameContainsForbiddenCharactersError(value);
     return new Nickname(value);
   }
+
+  static fromPersistence(value: string) {
+    return new Nickname(value);
+  }
 }

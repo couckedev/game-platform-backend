@@ -8,7 +8,7 @@ export const httpRegisterPlayerUnprocessableEntityResponseBody = z.object({
     'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS',
   ]),
 });
-export const httpRegisterPlayereUnprocessableEntityResponse = z.union([
+export const httpRegisterPlayerUnprocessableEntityResponse = z.union([
   z.object({
     statusCode: z.literal(422),
     body: httpRegisterPlayerUnprocessableEntityResponseBody,
@@ -16,5 +16,5 @@ export const httpRegisterPlayereUnprocessableEntityResponse = z.union([
 ]);
 
 export type HttpRegisterPlayerUnprocessableEntityResponse = z.infer<
-  typeof httpRegisterPlayereUnprocessableEntityResponse
+  typeof httpRegisterPlayerUnprocessableEntityResponse
 >;

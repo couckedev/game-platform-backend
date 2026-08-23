@@ -29,9 +29,9 @@ export class NestHttpAuthenticationGuard implements CanActivate {
     try {
       const request = context.switchToHttp().getRequest();
       const authorizationHeader: string = request.headers.authorization;
-
-      await this.httpAuthenticationGuard.authenticate(authorizationHeader);
-
+      const authenticatedIdentity =
+        await this.httpAuthenticationGuard.authenticate(authorizationHeader);
+      request.authenticatedIdentity = authenticatedIdentity;
       return true;
     } catch (error) {
       if (error instanceof HttpAuthorizationError) {
