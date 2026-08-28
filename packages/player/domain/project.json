@@ -8,8 +8,7 @@
 
   "targets": {
     "test": {},
-    "test:mutation": {},
-    "test:coverage": {},
+    "test:watch": {},
     "typecheck": {}
   }
 }

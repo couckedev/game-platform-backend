@@ -4,9 +4,14 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./nestjs": "./src/nestjs/index.ts"
+    "./nestjs": "./src/nestjs/index.ts",
+    "./openapi": "./src/openapi/index.ts",
+    "./database/testing": "./src/database/testcontainers/index.ts"
   },
   "dependencies": {
     "@shared/kernels": "workspace:*"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "catalog:"
   }
 }

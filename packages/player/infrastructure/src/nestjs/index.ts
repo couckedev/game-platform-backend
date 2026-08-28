@@ -1,0 +1,1 @@
+export { createNestPlayerModule } from './module';

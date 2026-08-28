@@ -1,0 +1,137 @@
+import type { PlayerRegistrationViewModel } from '@player/interface-adapters/view-models';
+import type { Renderer } from '@shared/infrastructure';
+import { describe, expect, it } from 'vitest';
+import type { HttpPlayerRegistrationResponse } from '../responses';
+import { HttpPlayerRegistrationView } from './player-registration-view';
+
+describe(HttpPlayerRegistrationView, () => {
+  it("renders 201 empty http response if view model is { status: 'SUCCESS' }", () => {
+    const viewModel: PlayerRegistrationViewModel = { status: 'SUCCESS' };
+    let renderedResponse: HttpPlayerRegistrationResponse | null = null;
+    const fakeRenderer: Renderer<HttpPlayerRegistrationResponse> = (
+      response: HttpPlayerRegistrationResponse,
+    ) => {
+      renderedResponse = response;
+    };
+    const view = new HttpPlayerRegistrationView(fakeRenderer);
+
+    view.render(viewModel);
+
+    expect(renderedResponse).toStrictEqual({ statusCode: 201, body: {} });
+  });
+
+  it("renders 422 http response with NICKNAME_TOO_SHORT reason  if view model is { status: 'FAILURE', rejectionReason: 'NICKNAME_TOO_SHORT' }", () => {
+    const viewModel: PlayerRegistrationViewModel = {
+      status: 'FAILURE',
+      rejectionReason: 'NICKNAME_TOO_SHORT',
+    };
+    let renderedResponse: HttpPlayerRegistrationResponse | null = null;
+    const fakeRenderer: Renderer<HttpPlayerRegistrationResponse> = (
+      response: HttpPlayerRegistrationResponse,
+    ) => {
+      renderedResponse = response;
+    };
+    const view = new HttpPlayerRegistrationView(fakeRenderer);
+
+    view.render(viewModel);
+
+    expect(renderedResponse).toStrictEqual({
+      statusCode: 422,
+      body: {
+        rejectionReason: 'NICKNAME_TOO_SHORT',
+      },
+    });
+  });
+
+  it("renders 422 http response with NICKNAME_TOO_LONG reason  if view model is { status: 'FAILURE', rejectionReason: 'NICKNAME_TOO_LONG' }", () => {
+    const viewModel: PlayerRegistrationViewModel = {
+      status: 'FAILURE',
+      rejectionReason: 'NICKNAME_TOO_LONG',
+    };
+    let renderedResponse: HttpPlayerRegistrationResponse | null = null;
+    const fakeRenderer: Renderer<HttpPlayerRegistrationResponse> = (
+      response: HttpPlayerRegistrationResponse,
+    ) => {
+      renderedResponse = response;
+    };
+    const view = new HttpPlayerRegistrationView(fakeRenderer);
+
+    view.render(viewModel);
+
+    expect(renderedResponse).toStrictEqual({
+      statusCode: 422,
+      body: {
+        rejectionReason: 'NICKNAME_TOO_LONG',
+      },
+    });
+  });
+
+  it("renders 422 http response with NICKNAME_TOO_FEW_LETTERS reason  if view model is { status: 'FAILURE', rejectionReason: 'NICKNAME_TOO_FEW_LETTERS' }", () => {
+    const viewModel: PlayerRegistrationViewModel = {
+      status: 'FAILURE',
+      rejectionReason: 'NICKNAME_TOO_FEW_LETTERS',
+    };
+    let renderedResponse: HttpPlayerRegistrationResponse | null = null;
+    const fakeRenderer: Renderer<HttpPlayerRegistrationResponse> = (
+      response: HttpPlayerRegistrationResponse,
+    ) => {
+      renderedResponse = response;
+    };
+    const view = new HttpPlayerRegistrationView(fakeRenderer);
+
+    view.render(viewModel);
+
+    expect(renderedResponse).toStrictEqual({
+      statusCode: 422,
+      body: {
+        rejectionReason: 'NICKNAME_TOO_FEW_LETTERS',
+      },
+    });
+  });
+
+  it("renders 422 http response with NICKNAME_TOO_FEW_LETTERS reason  if view model is { status: 'FAILURE', rejectionReason: 'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS' }", () => {
+    const viewModel: PlayerRegistrationViewModel = {
+      status: 'FAILURE',
+      rejectionReason: 'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS',
+    };
+    let renderedResponse: HttpPlayerRegistrationResponse | null = null;
+    const fakeRenderer: Renderer<HttpPlayerRegistrationResponse> = (
+      response: HttpPlayerRegistrationResponse,
+    ) => {
+      renderedResponse = response;
+    };
+    const view = new HttpPlayerRegistrationView(fakeRenderer);
+
+    view.render(viewModel);
+
+    expect(renderedResponse).toStrictEqual({
+      statusCode: 422,
+      body: {
+        rejectionReason: 'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS',
+      },
+    });
+  });
+
+  it("renders 409 http response with NICKNAME_ALREADY_TAKEN reason if view model is { status: 'FAILURE', rejectionReason: 'NICKNAME_ALREADY_TAKEN' }", () => {
+    const viewModel: PlayerRegistrationViewModel = {
+      status: 'FAILURE',
+      rejectionReason: 'NICKNAME_ALREADY_TAKEN',
+    };
+    let renderedResponse: HttpPlayerRegistrationResponse | null = null;
+    const fakeRenderer: Renderer<HttpPlayerRegistrationResponse> = (
+      response: HttpPlayerRegistrationResponse,
+    ) => {
+      renderedResponse = response;
+    };
+    const view = new HttpPlayerRegistrationView(fakeRenderer);
+
+    view.render(viewModel);
+
+    expect(renderedResponse).toStrictEqual({
+      statusCode: 409,
+      body: {
+        rejectionReason: 'NICKNAME_ALREADY_TAKEN',
+      },
+    });
+  });
+});

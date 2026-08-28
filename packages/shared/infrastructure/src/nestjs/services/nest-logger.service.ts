@@ -1,12 +1,12 @@
 import { Inject, Injectable, type LoggerService } from '@nestjs/common';
-import { LOGGER } from '../injection/tokens/logger.token.js';
-import type { Logger } from '../logging/common/logger.interface.js';
+import type { Logger as CommonLogger } from '../../logging/common';
+import { Logger } from '../tokens';
 
 @Injectable()
 export class NestLogger implements LoggerService {
   constructor(
-    @Inject(LOGGER)
-    private readonly logger: Logger,
+    @Inject(Logger)
+    private readonly logger: CommonLogger,
   ) {}
 
   log(message: string, context?: string) {

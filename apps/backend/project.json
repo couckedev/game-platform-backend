@@ -20,6 +20,14 @@
       }
     },
 
+    "generate-openapi": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx --tsconfig tsconfig.json scripts/generate-openapi-spec.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
+
     "start": {
       "executor": "nx:run-commands",
       "options": {
@@ -30,7 +38,7 @@
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",
-      "dependsOn": ["build"],
+      "dependsOn": ["build", "generate-openapi"],
       "options": {
         "buildTarget": "backend:build",
         "runBuildTargetDependencies": true

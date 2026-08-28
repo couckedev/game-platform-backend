@@ -1,43 +1,21 @@
-import { ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
-import {
-  FastifyAdapter,
-  type NestFastifyApplication,
-} from '@nestjs/platform-fastify';
 import { NestLogger } from '@shared/infrastructure/nestjs';
-import { AppModule } from './app/modules/app.module.js';
-import { setupSwagger } from './bootstrap/index.js';
+import { parseAppConfig } from './app/configuration';
+import { configureCors, configureGlobalPipes, createApp } from './bootstrap';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-    {
-      bufferLogs: true,
-    },
-  );
+  const appConfig = parseAppConfig(process.env);
+  const app = await createApp(appConfig);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+  configureGlobalPipes(app);
   app.enableShutdownHooks();
   app.useLogger(app.get(NestLogger));
-  const configService = app.get(ConfigService);
-  const host = configService.getOrThrow<string>('BACKEND_HOST');
-  const port = configService.getOrThrow<string>('BACKEND_PORT');
-  setupSwagger(app, port);
 
-  app.enableCors({
-    origin: configService.getOrThrow<string>('ALLOWED_ORIGINS'),
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Authorization', 'Content-Type'],
+  configureCors(app, appConfig);
+
+  await app.listen({
+    port: Number(appConfig.backend.port),
+    host: appConfig.backend.host,
   });
-  await app.listen({ port: Number(port), host });
 }
 
 void bootstrap();

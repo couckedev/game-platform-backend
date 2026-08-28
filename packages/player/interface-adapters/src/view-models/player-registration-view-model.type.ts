@@ -1,0 +1,13 @@
+export type PlayerRegistrationViewModel =
+  | {
+      status: 'SUCCESS';
+    }
+  | {
+      status: 'FAILURE';
+      rejectionReason:
+        | 'NICKNAME_TOO_SHORT'
+        | 'NICKNAME_TOO_LONG'
+        | 'NICKNAME_TOO_FEW_LETTERS'
+        | 'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS'
+        | 'NICKNAME_ALREADY_TAKEN';
+    };

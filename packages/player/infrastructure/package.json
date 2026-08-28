@@ -5,16 +5,16 @@
   "main": "./src/index.ts",
   "private": true,
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./testing": "./src/testing/index.ts",
+    "./nestjs": "./src/nestjs/index.ts",
+    "./openapi": "./src/openapi/index.ts"
   },
   "dependencies": {
-    "@player/domain": "workspace:*",
-    "@player/application": "workspace:*",
     "@player/interface-adapters": "workspace:*",
-    "@shared/infrastructure": "workspace:*",
-    "@shared/kernels": "workspace:*",
-    "drizzle-orm": "catalog:",
-    "pg": "catalog:",
-    "uuid": "catalog:"
+    "@shared/infrastructure": "workspace:*"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "catalog:"
   }
 }

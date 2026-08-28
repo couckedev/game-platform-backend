@@ -1,0 +1,91 @@
+{
+  "id": "ca883c17-84f0-4776-bb0b-db423940258f",
+  "prevId": "156cd90e-9026-473a-bdad-5d0b4d1e9fb4",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.players": {
+      "name": "players",
+      "schema": "",
+      "columns": {
+        "player_id": {
+          "name": "player_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "external_account_id": {
+          "name": "external_account_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nickname": {
+          "name": "nickname",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "pk_players": {
+          "name": "pk_players",
+          "columns": ["player_id", "external_account_id"]
+        }
+      },
+      "uniqueConstraints": {
+        "unique_player_id": {
+          "name": "unique_player_id",
+          "nullsNotDistinct": false,
+          "columns": ["player_id"]
+        },
+        "unique_external_account_id": {
+          "name": "unique_external_account_id",
+          "nullsNotDistinct": false,
+          "columns": ["external_account_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.reserved_nicknames": {
+      "name": "reserved_nicknames",
+      "schema": "",
+      "columns": {
+        "nickname": {
+          "name": "nickname",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "unique_nickname": {
+          "name": "unique_nickname",
+          "nullsNotDistinct": false,
+          "columns": ["nickname"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
