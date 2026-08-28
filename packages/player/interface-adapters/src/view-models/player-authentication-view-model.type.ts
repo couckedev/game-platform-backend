@@ -1,4 +1,6 @@
-export type PlayerAuthenticationViewModel = {
-  status: 'FOUND';
-  nickname: string;
-};
+export type PlayerAuthenticationViewModel =
+  | {
+      status: 'FOUND';
+      nickname: string;
+    }
+  | { status: 'NOT_FOUND' };

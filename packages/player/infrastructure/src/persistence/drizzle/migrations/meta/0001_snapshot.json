@@ -32,26 +32,19 @@
       "compositePrimaryKeys": {
         "pk_players": {
           "name": "pk_players",
-          "columns": [
-            "player_id",
-            "external_account_id"
-          ]
+          "columns": ["player_id", "external_account_id"]
         }
       },
       "uniqueConstraints": {
         "unique_player_id": {
           "name": "unique_player_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "player_id"
-          ]
+          "columns": ["player_id"]
         },
         "unique_external_account_id": {
           "name": "unique_external_account_id",
           "nullsNotDistinct": false,
-          "columns": [
-            "external_account_id"
-          ]
+          "columns": ["external_account_id"]
         }
       },
       "policies": {},
@@ -76,9 +69,7 @@
         "unique_nickname": {
           "name": "unique_nickname",
           "nullsNotDistinct": false,
-          "columns": [
-            "nickname"
-          ]
+          "columns": ["nickname"]
         }
       },
       "policies": {},

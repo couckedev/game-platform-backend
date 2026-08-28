@@ -25,4 +25,24 @@ describe(HttpPlayerAuthenticationView, () => {
       body: { nickname: viewModel.nickname },
     });
   });
+
+  it('renders 404 empty http response if view model status is NOT_FOUND', () => {
+    const viewModel: PlayerAuthenticationViewModel = {
+      status: 'NOT_FOUND',
+    };
+    let renderedResponse: HttpPlayerAuthenticationResponse | null = null;
+    const fakeRenderer: Renderer<HttpPlayerAuthenticationResponse> = (
+      response: HttpPlayerAuthenticationResponse,
+    ) => {
+      renderedResponse = response;
+    };
+    const view = new HttpPlayerAuthenticationView(fakeRenderer);
+
+    view.render(viewModel);
+
+    expect(renderedResponse).toStrictEqual({
+      statusCode: 404,
+      body: {},
+    });
+  });
 });

@@ -1,4 +1,6 @@
-export type AuthenticatePlayerOutputData = {
-  status: 'FOUND';
-  nickname: string;
-};
+export type AuthenticatePlayerOutputData =
+  | {
+      status: 'FOUND';
+      nickname: string;
+    }
+  | { status: 'NOT_FOUND' };

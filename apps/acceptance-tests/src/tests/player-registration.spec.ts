@@ -1,10 +1,10 @@
 import type { PlayerTestingModule } from '@player/infrastructure/testing';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { bootstrapAcceptanceTestsApplication } from '../bootstrap-acceptance-tests-application';
 
 describe('Player registration', () => {
   let playerTestingModule: PlayerTestingModule;
-  beforeAll(() => {
+  beforeEach(() => {
     const bootstrap = bootstrapAcceptanceTestsApplication();
     playerTestingModule = bootstrap.playerTestingModule;
   });

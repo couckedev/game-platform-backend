@@ -10,6 +10,13 @@ export class HttpPlayerAuthenticationView
   ) {}
 
   render(viewModel: PlayerAuthenticationViewModel): void {
+    if (viewModel.status === 'NOT_FOUND') {
+      this.renderHttpResponse({
+        statusCode: 404,
+        body: {},
+      });
+      return;
+    }
     this.renderHttpResponse({
       statusCode: 200,
       body: { nickname: viewModel.nickname },

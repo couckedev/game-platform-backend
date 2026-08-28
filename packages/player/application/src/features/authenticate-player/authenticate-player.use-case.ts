@@ -10,7 +10,11 @@ export class AuthenticatePlayerUseCase {
   async execute(externalAccountId: string): Promise<void> {
     const player =
       await this.playerRepository.findByExternalAccountId(externalAccountId);
+
     if (player === null) {
+      this.output.present({
+        status: 'NOT_FOUND',
+      });
       return;
     }
 

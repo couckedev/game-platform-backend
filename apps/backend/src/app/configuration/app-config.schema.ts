@@ -1,5 +1,5 @@
 import { LOG_FORMATS, LOG_LEVELS } from '@shared/infrastructure';
-import { string, z } from 'zod';
+import { z } from 'zod';
 
 export const AppConfigSchema = z.object({
   BACKEND_HOST: z.string(),
