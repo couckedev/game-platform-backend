@@ -6,7 +6,8 @@
         "NICKNAME_TOO_SHORT": "Nickname is too short",
         "NICKNAME_TOO_LONG": "Nickname is too long",
         "NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS": "Nickname contains forbidden characters",
-        "NICKNAME_TOO_FEW_LETTERS": "Nickname contains too few letters"
+        "NICKNAME_TOO_FEW_LETTERS": "Nickname contains too few letters",
+        "NICKNAME_ALREADY_TAKEN": "Nickname is already taken"
       }
     }
   }

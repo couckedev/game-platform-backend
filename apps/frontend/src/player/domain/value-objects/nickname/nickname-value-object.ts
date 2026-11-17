@@ -30,4 +30,8 @@ export class Nickname {
     }
     return { status: 'SUCCESS', value: new Nickname(value) };
   }
+
+  equals(nickname: Nickname) {
+    return this.value === nickname.value;
+  }
 }

@@ -217,6 +217,20 @@ describe('Player authentication', () => {
       expect(errors).toContainEqual('NICKNAME_TOO_FEW_LETTERS');
     },
   );
+
+  it('show error if user registers with nickname already taken', async () => {
+    const nickname = 'nickname123';
+    identityProviderServer.setIdentity('user1');
+    await signInUser();
+    await registerPlayerWithNickname(nickname);
+    await signOutUser();
+    identityProviderServer.setIdentity('user2');
+    await signInUser();
+    await registerPlayerWithNickname(nickname);
+
+    const errors = getRegistrationFormErrors();
+    expect(errors).toContainEqual('NICKNAME_ALREADY_TAKEN');
+  });
 });
 
 function getRegistrationFormErrors(): string[] {
