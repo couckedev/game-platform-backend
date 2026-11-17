@@ -7,6 +7,8 @@ const handlePlayerRegistrationFormSubmit = (event: SubmitEvent) => {
   const formData = new FormData(event.target as HTMLFormElement);
   playerStore.register(formData.get('nickname') as string);
 };
+
+const handleSignInWithGoogleButtonClick = () => playerStore.signIn('google');
 </script>
 
 <template>
@@ -15,7 +17,7 @@ const handlePlayerRegistrationFormSubmit = (event: SubmitEvent) => {
       v-if="!playerStore.hasSignedIn"
       type="button"
       data-testid="sign-in-with-google-button"
-      @click="playerStore.signIn"
+      @click="handleSignInWithGoogleButtonClick"
     >
       Sign in with Google
     </button>
