@@ -26,9 +26,28 @@ describe('Player authentication', () => {
   });
 
   it('returns 201 response if player is successfully registered', async () => {
-    const registerPlayer = await app.inject({ method: 'POST', url: '/players' });
+    const registerPlayer = await app.inject({
+      method: 'POST',
+      url: '/players',
+      body: { nickname: 'nickname' },
+    });
 
     expect(registerPlayer.statusCode).toStrictEqual(201);
+  });
+
+  it('returns 400 if player is registering without nickname', async () => {
+    const registerPlayer = await app.inject({
+      method: 'POST',
+      url: '/players',
+      body: {},
+    });
+
+    expect(registerPlayer.statusCode).toStrictEqual(400);
+    const responseBody = JSON.parse(registerPlayer.body);
+    expect(responseBody.errors).toContainEqual({
+      path: 'nickname',
+      message: 'nickname is missing',
+    });
   });
 
   afterEach(async () => {

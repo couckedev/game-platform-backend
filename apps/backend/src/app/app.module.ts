@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PlayerModule } from '@/player/infrastructure';
+import { PlayerModule } from '@/player/infrastructure/nestjs';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), PlayerModule],
