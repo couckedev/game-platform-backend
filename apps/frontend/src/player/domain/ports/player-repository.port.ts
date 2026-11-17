@@ -6,6 +6,6 @@ type PlayerRegistrationResult =
   | { status: 'FAILURE'; error: NicknameRegistrationRejectionReason };
 
 export interface PlayerRepository {
-  register(player: Player): PlayerRegistrationResult;
-  getCurrentPlayer(): Player | null;
+  register(player: Player): Promise<PlayerRegistrationResult>;
+  getCurrentPlayer(): Promise<Player | null>;
 }

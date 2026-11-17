@@ -15,7 +15,7 @@ const nicknameErrors = computed(() => {
   }));
 });
 
-const handleRegistrationFormSubmit = (nickname: string) => playerStore.register(nickname);
+const handleRegistrationFormSubmit = async (nickname: string) => playerStore.register(nickname);
 </script>
 
 <template>

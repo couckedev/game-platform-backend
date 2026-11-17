@@ -4,12 +4,12 @@ import { usePlayerStore } from '@/player/infrastructure/vuejs/stores';
 
 const playerStore = usePlayerStore();
 
-const handlePlayerRegistrationFormSubmit = (event: SubmitEvent) => {
+const handlePlayerRegistrationFormSubmit = async (event: SubmitEvent) => {
   const formData = new FormData(event.target as HTMLFormElement);
-  playerStore.register(formData.get('nickname') as string);
+  await playerStore.register(formData.get('nickname') as string);
 };
 
-const handleSignInWithGoogleButtonClick = () => playerStore.signIn('google');
+const handleSignInWithGoogleButtonClick = async () => playerStore.signIn('google');
 </script>
 
 <template>

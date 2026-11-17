@@ -3,7 +3,7 @@ import type { AuthenticatePlayerUseCase } from '@/player/application/features/au
 export class AuthenticatePlayerController {
   constructor(private readonly useCase: AuthenticatePlayerUseCase) {}
 
-  handle(): void {
-    this.useCase.execute();
+  handle(): Promise<void> {
+    return this.useCase.execute();
   }
 }

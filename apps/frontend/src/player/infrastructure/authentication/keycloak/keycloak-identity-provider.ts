@@ -5,7 +5,7 @@ export class KeycloakIdentityProvider implements IdentityProvider {
   constructor(private readonly keycloakInstance: Keycloak) {}
 
   async signIn(provider: string): Promise<void> {
-    await this.keycloakInstance.login({ loginHint: provider });
+    await this.keycloakInstance.login({ idpHint: provider });
   }
 
   signOut(): void {}

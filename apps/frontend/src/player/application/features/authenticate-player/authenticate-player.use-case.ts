@@ -7,8 +7,8 @@ export class AuthenticatePlayerUseCase {
     private readonly playerRepository: PlayerRepository,
   ) {}
 
-  execute(): void {
-    const authenticatedPlayer = this.playerRepository.getCurrentPlayer();
+  async execute(): Promise<void> {
+    const authenticatedPlayer = await this.playerRepository.getCurrentPlayer();
     if (authenticatedPlayer === null) {
       this.output.present({
         status: 'NOT_FOUND',
@@ -21,6 +21,5 @@ export class AuthenticatePlayerUseCase {
         nickname: authenticatedPlayer.nickname.value,
       },
     });
-    return;
   }
 }

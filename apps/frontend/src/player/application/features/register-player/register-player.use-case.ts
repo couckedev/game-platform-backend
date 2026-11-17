@@ -8,7 +8,7 @@ export class RegisterPlayerUseCase {
     private readonly playerRepository: PlayerRepository,
   ) {}
 
-  execute(inputData: RegisterPlayerInputData): void {
+  async execute(inputData: RegisterPlayerInputData): Promise<void> {
     const nickname = Nickname.create(inputData.nickname);
     if (nickname.status === 'FAILURE') {
       this.output.present({
@@ -20,7 +20,7 @@ export class RegisterPlayerUseCase {
     const player: Player = {
       nickname: nickname.value,
     };
-    const playerRegistrationResult = this.playerRepository.register(player);
+    const playerRegistrationResult = await this.playerRepository.register(player);
     if (playerRegistrationResult.status === 'FAILURE') {
       this.output.present({
         status: 'FAILURE',

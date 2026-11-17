@@ -2,15 +2,16 @@ import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/vue';
 import { beforeEach, describe, it } from 'vitest';
 import { createMemoryHistory } from 'vue-router';
+import { bootstrapApp } from '@/app/bootstrap';
+import App from '@/app/components/App.vue';
+import { createAppRouter } from '@/app/router';
 import type { Player } from '@/player/domain';
 import {
   InMemoryIdentityProvider,
   InMemoryIdentityProviderServer,
 } from '@/player/infrastructure/authentication/in-memory';
-import { createPlayerModule } from '@/player/infrastructure/composition/index.ts';
+import { createPlayerModule } from '@/player/infrastructure/composition';
 import { InMemoryPlayerRepository } from '@/player/infrastructure/persistence/in-memory';
-import { bootstrapApp } from '../src/app/bootstrap';
-import App from '../src/app/components/App.vue';
 
 const identityProviderServer = new InMemoryIdentityProviderServer();
 const registeredPlayers = new Map<string, Player>();
@@ -21,9 +22,10 @@ describe('Player authentication', () => {
   async function openApp(identityProviderServer: InMemoryIdentityProviderServer) {
     const identityProvider = new InMemoryIdentityProvider(identityProviderServer);
     const playerRepository = new InMemoryPlayerRepository(registeredPlayers, identityProvider);
+    const router = createAppRouter(createMemoryHistory());
     identityProvider.restore();
     const boostrap = bootstrapApp({
-      history: createMemoryHistory(),
+      router,
       identityProvider,
       playerModule: createPlayerModule({ identityProvider, playerRepository }),
     });
@@ -33,8 +35,8 @@ describe('Player authentication', () => {
       },
     });
 
-    await boostrap.router.push('/');
-    await boostrap.router.isReady();
+    await router.push('/');
+    await router.isReady();
 
     return app;
   }

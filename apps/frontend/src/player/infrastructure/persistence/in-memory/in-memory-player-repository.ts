@@ -8,7 +8,7 @@ export class InMemoryPlayerRepository implements PlayerRepository {
     private readonly identityProvider: IdentityProvider,
   ) {}
 
-  register(player: Player) {
+  async register(player: Player) {
     const identity = this.identityProvider.identity;
     if (identity === null) {
       throw new Error('Cannot register nickname, user is not signed in');
@@ -28,7 +28,7 @@ export class InMemoryPlayerRepository implements PlayerRepository {
     );
   }
 
-  getCurrentPlayer() {
+  async getCurrentPlayer() {
     const identity = this.identityProvider.identity;
     if (identity === null) {
       throw new Error('Cannot authenticate player, user is not signed in');

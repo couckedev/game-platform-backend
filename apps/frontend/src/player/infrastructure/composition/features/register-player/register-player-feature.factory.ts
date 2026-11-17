@@ -14,8 +14,8 @@ export function createRegisterPlayerFeature(
   const useCase = new RegisterPlayerUseCase(presenter, dependencies.playerRepository);
   const controller = new RegisterPlayerController(useCase);
 
-  return (request: RegisterPlayerRequest) => {
-    controller.handle(request);
+  return async (request: RegisterPlayerRequest) => {
+    await controller.handle(request);
     return presenter.requireViewModel();
   };
 }

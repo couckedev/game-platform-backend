@@ -3,8 +3,8 @@ import { usePlayerStore } from '@/player/infrastructure/vuejs/stores';
 import { onMounted } from 'vue';
 
 const playerStore = usePlayerStore();
-onMounted(() => {
-  playerStore.restoreIdentity();
+onMounted(async () => {
+  await playerStore.restoreIdentity();
 });
 </script>
 

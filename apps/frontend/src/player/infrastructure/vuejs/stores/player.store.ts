@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia';
-import { inject, ref } from 'vue';
-import type { IdentityProvider } from '@/player/infrastructure/authentication/common';
-import type { PlayerModule } from '@/player/infrastructure/composition';
-import { IdentityProviderToken, PlayerModuleToken } from '../tokens';
+import { ref } from 'vue';
+import { IdentityProviderToken, PlayerModuleToken } from '@/player/infrastructure/vuejs/tokens';
+import { injectStrict } from '@/shared';
 
 type PlayerAuthentication =
   | { status: 'SIGNED_OUT' }
@@ -16,36 +15,29 @@ interface RegistrationFormErrors {
 }
 
 export const usePlayerStore = defineStore('player', () => {
-  const identityProvider = inject<IdentityProvider>(IdentityProviderToken);
-  if (identityProvider === undefined) {
-    throw new Error('Identity provider must been set before using it');
-  }
-
-  const playerModule = inject<PlayerModule>(PlayerModuleToken);
-  if (playerModule === undefined) {
-    throw new Error('Player module must been set before using it');
-  }
+  const identityProvider = injectStrict(IdentityProviderToken);
+  const playerModule = injectStrict(PlayerModuleToken);
 
   const playerAuthentication = ref<PlayerAuthentication>({ status: 'SIGNED_OUT' });
   const registrationFormErrors = ref<RegistrationFormErrors>({
     nickname: [],
   });
 
-  const signIn = (provider: string) => {
+  const signIn = async (provider: string) => {
     identityProvider.signIn(provider);
-    authenticatePlayer();
+    await authenticatePlayer();
   };
 
-  const restoreIdentity = () => {
+  const restoreIdentity = async () => {
     identityProvider.restore();
     if (identityProvider.identity === null) {
       return;
     }
-    authenticatePlayer();
+    await authenticatePlayer();
   };
 
-  const authenticatePlayer = () => {
-    const viewModel = playerModule.authenticatePlayer();
+  const authenticatePlayer = async () => {
+    const viewModel = await playerModule.authenticatePlayer();
     if (viewModel.status === 'FOUND') {
       playerAuthentication.value = {
         status: 'AUTHENTICATED',
@@ -64,9 +56,9 @@ export const usePlayerStore = defineStore('player', () => {
     playerAuthentication.value = { status: 'SIGNED_OUT' };
   };
 
-  const register = (nickname: string) => {
+  const register = async (nickname: string) => {
     const request = { nickname };
-    const viewModel = playerModule.registerPlayer(request);
+    const viewModel = await playerModule.registerPlayer(request);
     if (viewModel.status === 'SUCCESS') {
       playerAuthentication.value = {
         status: 'AUTHENTICATED',

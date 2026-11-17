@@ -7,10 +7,10 @@ import type { RegisterPlayerRequest } from './register-player.request';
 export class RegisterPlayerController {
   constructor(private readonly useCase: RegisterPlayerUseCase) {}
 
-  handle(request: RegisterPlayerRequest): void {
+  handle(request: RegisterPlayerRequest): Promise<void> {
     const inputData: RegisterPlayerInputData = {
       nickname: request.nickname,
     };
-    this.useCase.execute(inputData);
+    return this.useCase.execute(inputData);
   }
 }

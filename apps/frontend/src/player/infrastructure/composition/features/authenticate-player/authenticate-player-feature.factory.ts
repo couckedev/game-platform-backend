@@ -12,8 +12,8 @@ export function createAuthenticatePlayerFeature(
   const presenter = new AuthenticatePlayerPresenter();
   const useCase = new AuthenticatePlayerUseCase(presenter, dependencies.playerRepository);
   const controller = new AuthenticatePlayerController(useCase);
-  return () => {
-    controller.handle();
+  return async () => {
+    await controller.handle();
     return presenter.requireViewModel();
   };
 }
