@@ -88,6 +88,18 @@ describe('Player authentication', () => {
     },
   );
 
+  it('returns 422 if player is registering with a nickname longer than 20 characters', async () => {
+    const registerPlayer = await app.inject({
+      method: 'POST',
+      url: PLAYER_API_URL,
+      body: { nickname: 'a'.repeat(21) },
+    });
+
+    expect(registerPlayer.statusCode).toStrictEqual(422);
+    expect(JSON.parse(registerPlayer.body)).toStrictEqual({
+      rejectionReason: 'NICKNAME_TOO_LONG',
+    });
+  });
   afterEach(async () => {
     await app.close();
   });

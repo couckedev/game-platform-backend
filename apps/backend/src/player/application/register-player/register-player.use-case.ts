@@ -1,4 +1,4 @@
-import { Nickname, NicknameTooShortError } from '@/player/domain';
+import { Nickname, NicknameTooLongError, NicknameTooShortError } from '@/player/domain';
 import { RegisterPlayerInputData } from './register-player.input-data';
 import { RegisterPlayerOutput } from './register-player-output.port';
 
@@ -13,6 +13,10 @@ export class RegisterPlayerUseCase {
     } catch (error) {
       if (error instanceof NicknameTooShortError) {
         this.output.present({ status: 'FAILURE', reason: 'NICKNAME_TOO_SHORT' });
+        return;
+      }
+      if (error instanceof NicknameTooLongError) {
+        this.output.present({ status: 'FAILURE', reason: 'NICKNAME_TOO_LONG' });
         return;
       }
       throw error;

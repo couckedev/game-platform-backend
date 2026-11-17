@@ -9,7 +9,7 @@ export class FastifyPlayerRegistrationView {
       this.httpResponse.status(201).send({});
       return;
     }
-    this.httpResponse.status(422).send({ rejectionReason: 'NICKNAME_TOO_SHORT' });
+    this.httpResponse.status(422).send({ rejectionReason: viewModel.reason });
     return;
   }
 }
