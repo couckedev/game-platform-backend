@@ -4,5 +4,9 @@ export type RegisterPlayerOutputData =
     }
   | {
       status: 'FAILURE';
-      reason: 'NICKNAME_TOO_SHORT' | 'NICKNAME_TOO_LONG' | 'NICKNAME_FORBIDDEN_CHARACTERS';
+      reason:
+        | 'NICKNAME_TOO_SHORT'
+        | 'NICKNAME_TOO_LONG'
+        | 'NICKNAME_FORBIDDEN_CHARACTERS'
+        | 'NICKNAME_TOO_FEW_LETTERS';
     };

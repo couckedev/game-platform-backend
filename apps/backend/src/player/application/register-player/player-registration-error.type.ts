@@ -1,5 +1,6 @@
 import {
   NicknameForbiddenCharactersError,
+  NicknameTooFewLetters,
   NicknameTooLongError,
   NicknameTooShortError,
 } from '@/player/domain';
@@ -7,12 +8,14 @@ import {
 export type PlayerRegistrationError =
   | NicknameTooShortError
   | NicknameTooLongError
-  | NicknameForbiddenCharactersError;
+  | NicknameForbiddenCharactersError
+  | NicknameTooFewLetters;
 
 export function isPlayerRegistrationError(error: unknown): error is PlayerRegistrationError {
   return (
     error instanceof NicknameTooShortError ||
     error instanceof NicknameTooLongError ||
-    error instanceof NicknameForbiddenCharactersError
+    error instanceof NicknameForbiddenCharactersError ||
+    error instanceof NicknameTooFewLetters
   );
 }

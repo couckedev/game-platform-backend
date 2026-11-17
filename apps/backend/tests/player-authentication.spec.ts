@@ -122,6 +122,22 @@ describe('Player authentication', () => {
     },
   );
 
+  it.each([{ letterCount: 0 }, { letterCount: 1 }, { letterCount: 2 }])(
+    'returns 422 if player is registering with a nickname containing fewer than 3 letters (current letter count: $letterCount)',
+    async ({ letterCount }) => {
+      const registerPlayer = await app.inject({
+        method: 'POST',
+        url: PLAYER_API_URL,
+        body: { nickname: `12345678${'a'.repeat(letterCount)}` },
+      });
+
+      expect(registerPlayer.statusCode).toStrictEqual(422);
+      expect(JSON.parse(registerPlayer.body)).toStrictEqual({
+        rejectionReason: 'NICKNAME_TOO_FEW_LETTERS',
+      });
+    },
+  );
+
   afterEach(async () => {
     await app.close();
   });
