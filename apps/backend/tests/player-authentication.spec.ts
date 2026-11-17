@@ -1,8 +1,7 @@
-import { HttpStatus } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { beforeEach, describe, it } from 'vitest';
-import { PlayerModule } from '@/player/infrastructure';
+import { PlayerModule } from '@/player/infrastructure/nestjs';
 
 describe('Player authentication', () => {
   let app: NestFastifyApplication;
@@ -22,8 +21,14 @@ describe('Player authentication', () => {
   it('returns 404 response if authenticated user is not registered yet', async () => {
     const getCurrentPlayer = await app.inject({ method: 'GET', url: '/players/me' });
 
-    expect(getCurrentPlayer.statusCode).toStrictEqual(HttpStatus.NOT_FOUND);
+    expect(getCurrentPlayer.statusCode).toStrictEqual(404);
     expect(JSON.parse(getCurrentPlayer.body)).toStrictEqual({ message: 'Player not found' });
+  });
+
+  it('returns 201 response if player is successfully registered', async () => {
+    const registerPlayer = await app.inject({ method: 'POST', url: '/players' });
+
+    expect(registerPlayer.statusCode).toStrictEqual(201);
   });
 
   afterEach(async () => {

@@ -1,6 +1,6 @@
 import { OpenAPIRegistry, OpenApiGeneratorV31 } from '@asteasolutions/zod-to-openapi';
 import type { OpenAPIV3_1 } from 'openapi-types';
-import { playerModuleRegistry } from '@/player/infrastructure';
+import { playerModuleRegistry } from '@/player/infrastructure/openapi';
 
 interface OpenApiConfig {
   authorizationUrl: string;
