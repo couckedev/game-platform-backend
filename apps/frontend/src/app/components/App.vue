@@ -1,11 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { usePlayerStore } from '@/player/infrastructure/vuejs';
+
+const playerStore = usePlayerStore();
+onMounted(() => {
+  playerStore.restoreIdentity();
+});
+</script>
 
 <template>
-  <nav aria-label="Main navigation">
-    <router-link :to="{ name: 'sign-in' }">Sign in</router-link>
-  </nav>
   <router-view />
-    
 </template>
 
 <style scoped></style>
