@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { PlayerRegistrationFormViewEmits } from './player-registration-form-view-emits.interface';
 
 const nickname = ref('');
-
-interface PlayerRegistrationFormViewEmits {
-  registrationFormSubmitted: [nickname: string];
-}
 
 const emits = defineEmits<PlayerRegistrationFormViewEmits>();
 </script>
@@ -16,6 +13,13 @@ const emits = defineEmits<PlayerRegistrationFormViewEmits>();
     aria-labelledby="registration-form-title"
     @submit.preventDefault="emits('registrationFormSubmitted', nickname)"
   >
+    <label for="nickname">Nickname</label>
+    <input
+      type="text"
+      id="nickname"
+      v-model="nickname"
+    />
+    <button type="submit">Register an account</button>
   </form>
 </template>
 

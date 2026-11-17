@@ -44,6 +44,16 @@ async function clickOnGoogleSignInButton() {
   await userEvent.click(signInWithGoogleButton);
 }
 
+async function fillAndSubmitRegistrationForm(nickname: string) {
+  const registrationForm = screen.getByRole('form', { name: /Register on Game Platform/i });
+  const nicknameInput = within(registrationForm).getByRole('textbox', { name: /Nickname/i });
+  await userEvent.type(nicknameInput, nickname);
+  const registrationFormSubmitButton = within(registrationForm).getByRole('button', {
+    name: /Register an account/i,
+  });
+  await userEvent.click(registrationFormSubmitButton);
+}
+
 describe('Player authentication', () => {
   let app: RenderResult;
   let authenticationServer: InMemoryAuthenticationServer;
@@ -90,9 +100,20 @@ describe('Player authentication', () => {
   });
   it('hides main navigation if unregistered user has signed in', async () => {
     await goToSignInPage();
-
     await clickOnGoogleSignInButton();
 
     expect(() => screen.getByRole('navigation', { name: 'Main navigation' })).toThrow();
+  });
+
+  it('shows registered player nickname on main navigation if valid registration form is submitted', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+
+    await fillAndSubmitRegistrationForm('nickname123');
+
+    const mainNavigation = screen.getByRole('navigation', { name: 'Main navigation' });
+    expect(within(mainNavigation).getByRole('link', { name: 'nickname123' })).toBeInstanceOf(
+      HTMLElement,
+    );
   });
 });

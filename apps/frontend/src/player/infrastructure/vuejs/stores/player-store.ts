@@ -1,7 +1,11 @@
 import { defineStore } from 'pinia';
-import { inject, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import type { Authentication, Provider } from '@/player/infrastructure/authentication/common';
 import { AuthenticationToken } from '../tokens';
+
+interface AuthenticatedPlayer {
+  nickname: string;
+}
 
 export const usePlayerStore = defineStore('player', () => {
   const authentication = inject<Authentication>(AuthenticationToken);
@@ -10,6 +14,10 @@ export const usePlayerStore = defineStore('player', () => {
   }
 
   const hasSignedIn = ref(false);
+  const isRegistering = computed(() => {
+    return hasSignedIn.value === true && authenticatedPlayer.value === null;
+  });
+  const authenticatedPlayer = ref<AuthenticatedPlayer | null>(null);
 
   const signInWith = async (provider: Provider) => {
     await authentication.startSignInProcess();
@@ -21,5 +29,10 @@ export const usePlayerStore = defineStore('player', () => {
     hasSignedIn.value = authentication.isAuthenticated;
   };
 
-  return { signInWith, restoreIdentity, hasSignedIn };
+  const register = (nickname: string) => {
+    hasSignedIn.value = true;
+    authenticatedPlayer.value = { nickname };
+  };
+
+  return { signInWith, restoreIdentity, register, hasSignedIn, isRegistering, authenticatedPlayer };
 });
