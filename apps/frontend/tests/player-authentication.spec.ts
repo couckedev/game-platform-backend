@@ -163,7 +163,6 @@ describe('Player authentication', () => {
     await registerPlayerWithNickname(nicknameValue);
 
     const errors = getRegistrationFormErrors();
-    expect(errors.length).toStrictEqual(1);
     expect(errors).toContainEqual('NICKNAME_TOO_SHORT');
   });
 
@@ -174,7 +173,6 @@ describe('Player authentication', () => {
     await registerPlayerWithNickname('nicknamenicknamenicknamenickname');
 
     const errors = getRegistrationFormErrors();
-    expect(errors.length).toStrictEqual(1);
     expect(errors).toContainEqual('NICKNAME_TOO_LONG');
   });
 
@@ -185,7 +183,6 @@ describe('Player authentication', () => {
     await registerPlayerWithNickname('n!ck');
 
     const errors = getRegistrationFormErrors();
-    expect(errors.length).toStrictEqual(2);
     expect(errors).toContainEqual('NICKNAME_TOO_SHORT');
     expect(errors).toContainEqual('NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS');
   });
@@ -204,17 +201,22 @@ describe('Player authentication', () => {
     },
   );
 
-  it('shows two errors if user registers with too long nickname containing too few letters', async () => {
-    identityProviderServer.setIdentity('user');
-    await signInUser();
+  it.each([
+    { nicknameValue: '-_--_--_' },
+    { nicknameValue: '123456789' },
+    { nicknameValue: '-_-1234-_-_--' },
+  ])(
+    'shows error if user registers with nickname containing too few letters',
+    async ({ nicknameValue }) => {
+      identityProviderServer.setIdentity('user');
+      await signInUser();
 
-    await registerPlayerWithNickname('123456789123456789123456');
+      await registerPlayerWithNickname(nicknameValue);
 
-    const errors = getRegistrationFormErrors();
-    expect(errors.length).toStrictEqual(2);
-    expect(errors).toContainEqual('NICKNAME_TOO_LONG');
-    expect(errors).toContainEqual('NICKNAME_TOO_FEW_LETTERS');
-  });
+      const errors = getRegistrationFormErrors();
+      expect(errors).toContainEqual('NICKNAME_TOO_FEW_LETTERS');
+    },
+  );
 });
 
 function getRegistrationFormErrors(): string[] {

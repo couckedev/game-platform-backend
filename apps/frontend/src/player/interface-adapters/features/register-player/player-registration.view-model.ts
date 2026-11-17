@@ -1,7 +1,8 @@
 type NicknameErrorCode =
   | 'NICKNAME_TOO_SHORT'
   | 'NICKNAME_TOO_LONG'
-  | 'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS';
+  | 'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS'
+  | 'NICKNAME_TOO_FEW_LETTERS';
 
 export type PlayerRegistrationViewModel =
   | {
