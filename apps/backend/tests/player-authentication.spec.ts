@@ -53,7 +53,7 @@ describe('Player authentication', () => {
   it('returns 400 if player is registering with empty nickname', async () => {
     const registerPlayer = await app.inject({
       method: 'POST',
-      url: PLAYER_API_URL,
+      url: '/players',
       body: { nickname: '' },
     });
 
@@ -63,6 +63,30 @@ describe('Player authentication', () => {
       expect.objectContaining({ message: 'nickname cannot be empty' }),
     );
   });
+
+  it.each([
+    { nicknameValue: 'n', nicknameLength: 1 },
+    { nicknameValue: 'ni', nicknameLength: 2 },
+    { nicknameValue: 'nic', nicknameLength: 3 },
+    { nicknameValue: 'nick', nicknameLength: 4 },
+    { nicknameValue: 'nickn', nicknameLength: 5 },
+    { nicknameValue: 'nickna', nicknameLength: 6 },
+    { nicknameValue: 'nicknam', nicknameLength: 7 },
+  ])(
+    'returns 422 if player is registering with a nickname shorter than 8 characters (current length: $nicknameLength)',
+    async ({ nicknameValue }) => {
+      const registerPlayer = await app.inject({
+        method: 'POST',
+        url: '/players',
+        body: { nickname: nicknameValue },
+      });
+
+      expect(registerPlayer.statusCode).toStrictEqual(422);
+      expect(JSON.parse(registerPlayer.body)).toStrictEqual({
+        rejectionReason: 'NICKNAME_TOO_SHORT',
+      });
+    },
+  );
 
   afterEach(async () => {
     await app.close();
