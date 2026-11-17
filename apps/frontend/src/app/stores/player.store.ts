@@ -1,60 +1,70 @@
 import { defineStore } from 'pinia';
 import { inject, ref } from 'vue';
+import type { IdentityProvider } from '@/player/infrastructure/authentication/common';
+import type { PlayerModule } from '@/player/infrastructure/composition';
+import { IdentityProviderToken, PlayerModuleToken } from '../tokens';
 
-interface AuthenticatedPlayer {
-  nickname: string;
-}
+type PlayerAuthentication =
+  | { status: 'SIGNED_OUT' }
+  | {
+      status: 'NOT_REGISTERED';
+    }
+  | { status: 'AUTHENTICATED'; player: { nickname: string } };
 
-interface IdentityProvider {
-  signIn(provider: string): void;
-  signOut(): void;
-}
-
-interface Player {
-  nickname: string;
-}
-interface PlayerRepository {
-  register(player: Player): void;
-  getCurrentPlayer(): Player | null;
-}
 export const usePlayerStore = defineStore('player', () => {
-  const identityProvider = inject<IdentityProvider>('IdentityProvider');
+  const identityProvider = inject<IdentityProvider>(IdentityProviderToken);
   if (identityProvider === undefined) {
     throw new Error('Identity provider must been set before using it');
   }
 
-  const playerRepository = inject<PlayerRepository>('PlayerRepository');
-  if (playerRepository === undefined) {
-    throw new Error('Player repository must been set before using it');
+  const playerModule = inject<PlayerModule>(PlayerModuleToken);
+  if (playerModule === undefined) {
+    throw new Error('Player module must been set before using it');
   }
 
-  const hasSignedIn = ref(false);
-  const authenticatedPlayer = ref<AuthenticatedPlayer | null>(null);
+  const playerAuthentication = ref<PlayerAuthentication>({ status: 'SIGNED_OUT' });
 
   const signIn = (provider: string) => {
     identityProvider.signIn(provider);
-    hasSignedIn.value = true;
-    const currentPlayer = playerRepository.getCurrentPlayer();
-    if (currentPlayer !== null) {
-      authenticatedPlayer.value = {
-        nickname: currentPlayer.nickname,
-      };
+    authenticatePlayer();
+  };
+
+  const restoreIdentity = () => {
+    identityProvider.restore();
+    if (identityProvider.identity === null) {
+      return;
     }
+    authenticatePlayer();
+  };
+
+  const authenticatePlayer = () => {
+    const viewModel = playerModule.authenticatePlayer();
+    if (viewModel.status === 'FOUND') {
+      playerAuthentication.value = {
+        status: 'AUTHENTICATED',
+        player: viewModel.authenticatedPlayer,
+      };
+      return;
+    }
+    playerAuthentication.value = {
+      status: 'NOT_REGISTERED',
+    };
+    return;
   };
 
   const signOut = () => {
     identityProvider.signOut();
-    hasSignedIn.value = false;
-    authenticatedPlayer.value = null;
+    playerAuthentication.value = { status: 'SIGNED_OUT' };
   };
 
   const register = (nickname: string) => {
-    const player: Player = {
-      nickname,
+    const request = { nickname };
+    const viewModel = playerModule.registerPlayer(request);
+    playerAuthentication.value = {
+      status: 'AUTHENTICATED',
+      player: viewModel.registeredPlayer,
     };
-    playerRepository.register(player);
-    authenticatedPlayer.value = { nickname };
   };
 
-  return { signIn, signOut, register, hasSignedIn, authenticatedPlayer };
+  return { signIn, signOut, register, restoreIdentity, playerAuthentication };
 });

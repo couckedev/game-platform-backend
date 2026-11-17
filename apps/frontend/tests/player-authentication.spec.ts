@@ -1,102 +1,51 @@
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/vue';
-import { createPinia } from 'pinia';
 import { beforeEach, describe, it } from 'vitest';
 import { createMemoryHistory } from 'vue-router';
+import type { Player } from '@/player/domain';
+import {
+  InMemoryIdentityProvider,
+  InMemoryIdentityProviderServer,
+} from '@/player/infrastructure/authentication/in-memory';
+import { createPlayerModule } from '@/player/infrastructure/composition/index.ts';
+import { InMemoryPlayerRepository } from '@/player/infrastructure/persistence/in-memory';
+import { bootstrapApp } from '../src/app/bootstrap';
 import App from '../src/app/components/App.vue';
-import { createAppRouter } from '../src/app/router/index.ts';
 
-interface AuthenticatedUserIdentity {
-  externalAccountId: string;
-}
-interface IdentityProvider {
-  signIn(provider: string): void;
-  signOut(): void;
-  identity: AuthenticatedUserIdentity | null;
-}
-
-class InMemoryIdentityProviderServer {
-  private _identity: string | null = null;
-
-  setIdentity(identity: string) {
-    this._identity = identity;
-  }
-
-  requireIdentity(): string {
-    if (this._identity === null) {
-      throw new Error('Identity must be set on in memory identity provider server before using it');
-    }
-    return this._identity;
-  }
-}
-
-class InMemoryIdentityProvider implements IdentityProvider {
-  _authenticatedUserIdentity: AuthenticatedUserIdentity | null = null;
-
-  constructor(private readonly identityProviderServer: InMemoryIdentityProviderServer) {}
-
-  signIn(provider: 'google') {
-    this._authenticatedUserIdentity = {
-      externalAccountId: `${provider}-${this.identityProviderServer.requireIdentity()}`,
-    };
-  }
-
-  signOut(): void {
-    this._authenticatedUserIdentity = null;
-  }
-
-  get identity() {
-    return this._authenticatedUserIdentity;
-  }
-}
-
-interface Player {
-  nickname: string;
-}
-
-interface PlayerRepository {
-  register(player: Player): void;
-  getCurrentPlayer(): Player | null;
-}
-class InMemoryPlayerRepository implements PlayerRepository {
-  private readonly _registeredPlayers = new Map<string, Player>();
-
-  constructor(private readonly identityProvider: IdentityProvider) {}
-
-  register(player: Player): void {
-    const identity = this.identityProvider.identity;
-    if (identity === null) {
-      throw new Error('Cannot register nickname, user is not signed in');
-    }
-    this._registeredPlayers.set(identity.externalAccountId, player);
-  }
-
-  getCurrentPlayer() {
-    const identity = this.identityProvider.identity;
-    if (identity === null) {
-      throw new Error('Cannot register nickname, user is not signed in');
-    }
-    return this._registeredPlayers.get(identity.externalAccountId) ?? null;
-  }
-}
+const identityProviderServer = new InMemoryIdentityProviderServer();
+const registeredPlayers = new Map<string, Player>();
 
 describe('Player authentication', () => {
-  const identityProviderServer = new InMemoryIdentityProviderServer();
-  beforeEach(async () => {
-    const history = createMemoryHistory();
-    const router = createAppRouter(history);
-    await router.push('/');
+  let app: ReturnType<typeof render>;
+
+  async function openApp(identityProviderServer: InMemoryIdentityProviderServer) {
     const identityProvider = new InMemoryIdentityProvider(identityProviderServer);
-    const playerRepository = new InMemoryPlayerRepository(identityProvider);
-    render(App, {
+    const playerRepository = new InMemoryPlayerRepository(registeredPlayers, identityProvider);
+    identityProvider.restore();
+    const boostrap = bootstrapApp({
+      history: createMemoryHistory(),
+      identityProvider,
+      playerModule: createPlayerModule({ identityProvider, playerRepository }),
+    });
+    app = render(App, {
       global: {
-        plugins: [createPinia(), router],
-        provide: {
-          IdentityProvider: identityProvider,
-          PlayerRepository: playerRepository,
-        },
+        plugins: [boostrap],
       },
     });
+
+    await boostrap.router.push('/');
+    await boostrap.router.isReady();
+
+    return app;
+  }
+
+  beforeEach(async () => {
+    app = await openApp(identityProviderServer);
+  });
+
+  afterEach(() => {
+    identityProviderServer.signOut();
+    registeredPlayers.clear();
   });
 
   it('shows login page when sign-in navigation link is clicked', async () => {
@@ -148,12 +97,11 @@ describe('Player authentication', () => {
     await signInUser();
     await registerPlayerWithNickname('nickname');
 
-    expect(screen.getByTestId('authenticated-player-nickname-navigation-label')).toBeInstanceOf(
-      HTMLElement,
+    const authenticatedPlayerNicknameNavigationlabel = screen.getByTestId(
+      'authenticated-player-nickname-navigation-label',
     );
-    expect(
-      screen.getByTestId('authenticated-player-nickname-navigation-label').textContent,
-    ).toStrictEqual('nickname');
+    expect(authenticatedPlayerNicknameNavigationlabel).toBeInstanceOf(HTMLElement);
+    expect(authenticatedPlayerNicknameNavigationlabel.textContent).toStrictEqual('nickname');
   });
 
   it('shows registration form if user 1 signs in, registered, signs out and user 2 signs in', async () => {
@@ -176,12 +124,28 @@ describe('Player authentication', () => {
 
     await signInUser();
 
-    expect(screen.getByTestId('authenticated-player-nickname-navigation-label')).toBeInstanceOf(
-      HTMLElement,
+    const authenticatedPlayerNicknameNavigationlabel = screen.getByTestId(
+      'authenticated-player-nickname-navigation-label',
     );
-    expect(
-      screen.getByTestId('authenticated-player-nickname-navigation-label').textContent,
-    ).toStrictEqual('nickname');
+    expect(authenticatedPlayerNicknameNavigationlabel).toBeInstanceOf(HTMLElement);
+    expect(authenticatedPlayerNicknameNavigationlabel.textContent).toStrictEqual('nickname');
+  });
+
+  it('shows authenticated player nickname if signed in user refreshes the page', async () => {
+    identityProviderServer.setIdentity('user');
+    await signInUser();
+    await registerPlayerWithNickname('nickname');
+    await signOutUser();
+    await signInUser();
+
+    app.unmount();
+    await openApp(identityProviderServer);
+
+    const authenticatedPlayerNicknameNavigationlabel = screen.getByTestId(
+      'authenticated-player-nickname-navigation-label',
+    );
+    expect(authenticatedPlayerNicknameNavigationlabel).toBeInstanceOf(HTMLElement);
+    expect(authenticatedPlayerNicknameNavigationlabel.textContent).toStrictEqual('nickname');
   });
 });
 

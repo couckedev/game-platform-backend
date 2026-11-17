@@ -14,7 +14,7 @@ const handleSignInWithGoogleButtonClick = () => playerStore.signIn('google');
 <template>
   <div data-testid="sign-in-page">
     <button
-      v-if="!playerStore.hasSignedIn"
+      v-if="playerStore.playerAuthentication.status === 'SIGNED_OUT'"
       type="button"
       data-testid="sign-in-with-google-button"
       @click="handleSignInWithGoogleButtonClick"
@@ -24,7 +24,7 @@ const handleSignInWithGoogleButtonClick = () => playerStore.signIn('google');
 
     <form
       data-testid="player-registration-form"
-      v-if="playerStore.hasSignedIn && playerStore.authenticatedPlayer === null"
+      v-if="playerStore.playerAuthentication.status === 'NOT_REGISTERED'"
       @submit="handlePlayerRegistrationFormSubmit"
     >
       <input type="text" data-testid="player-registration-form-nickname-input" name="nickname" />

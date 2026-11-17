@@ -6,13 +6,16 @@ const playerStore = usePlayerStore();
 
 <template>
   <router-link
-    v-if="!playerStore.hasSignedIn"
+    v-if="playerStore.playerAuthentication.status === 'SIGNED_OUT'"
     :to="{ name: 'sign-in' }"
     data-testid="sign-in-navigation-link"
     >Sign in</router-link
   >
   <button
-    v-if="playerStore.hasSignedIn"
+    v-if="
+      playerStore.playerAuthentication.status === 'AUTHENTICATED' ||
+      playerStore.playerAuthentication.status === 'NOT_REGISTERED'
+    "
     data-testid="sign-out-navigation-button"
     @click="playerStore.signOut"
   >
@@ -20,8 +23,8 @@ const playerStore = usePlayerStore();
   </button>
   <span
     data-testid="authenticated-player-nickname-navigation-label"
-    v-if="playerStore.hasSignedIn && playerStore.authenticatedPlayer !== null"
-    >{{ playerStore.authenticatedPlayer.nickname }}</span
+    v-if="playerStore.playerAuthentication.status === 'AUTHENTICATED'"
+    >{{ playerStore.playerAuthentication.player.nickname }}</span
   >
 </template>
 

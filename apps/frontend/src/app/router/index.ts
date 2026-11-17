@@ -1,9 +1,4 @@
-import {
-  createRouter,
-  createWebHistory,
-  type RouteRecordRaw,
-  type RouterHistory,
-} from 'vue-router';
+import { createRouter, type RouteRecordRaw, type RouterHistory } from 'vue-router';
 import { DefaultLayout } from '../layouts';
 import HomePage from '../pages/HomePage.vue';
 import SignInPage from '../pages/SignInPage.vue';
@@ -19,8 +14,6 @@ export const routes: RouteRecordRaw[] = [
   },
 ];
 
-export function createAppRouter(
-  history: RouterHistory = createWebHistory(import.meta.env.BASE_URL),
-) {
+export function createAppRouter(history: RouterHistory) {
   return createRouter({ history, routes });
 }
