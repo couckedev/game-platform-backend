@@ -11,6 +11,7 @@ const playerStore = usePlayerStore();
     data-testid="sign-in-navigation-link"
     >Sign in</router-link
   >
+  <button v-if="playerStore.hasSignedIn" data-testid="sign-out-navigation-button">Sign out</button>
 </template>
 
 <style scoped></style>

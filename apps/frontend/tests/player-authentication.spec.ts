@@ -42,4 +42,13 @@ describe('Player authentication', () => {
 
     expect(() => screen.getByTestId('sign-in-navigation-link')).toThrow();
   });
+  it('shows sign-out navigation link when user has signed in', async () => {
+    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
+    await userEvent.click(signInNavigationLink);
+    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
+
+    await userEvent.click(signInWithGoogleButton);
+
+    expect(screen.getByTestId('sign-out-navigation-button')).toBeInstanceOf(HTMLElement);
+  });
 });
