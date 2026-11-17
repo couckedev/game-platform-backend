@@ -151,26 +151,59 @@ describe('Player authentication', () => {
   it('shows error if user registers with nickname too short ', async () => {
     identityProviderServer.setIdentity('user');
     await signInUser();
+
     await registerPlayerWithNickname('nick');
 
-    const registrationErrorContainer = screen.getByTestId('registration-form-nickname-error');
-    expect(registrationErrorContainer.getAttribute('data-error-code')).toStrictEqual(
-      'NICKNAME_TOO_SHORT',
-    );
+    const errors = getRegistrationFormErrors();
+    expect(errors.length).toStrictEqual(1);
+    expect(errors).toContainEqual('NICKNAME_TOO_SHORT');
   });
 
   it('shows error if user registers with too long nickname', async () => {
     identityProviderServer.setIdentity('user');
     await signInUser();
+
     await registerPlayerWithNickname('nicknamenicknamenicknamenickname');
 
-    const registrationErrorContainer = screen.getByTestId('registration-form-nickname-error');
-    expect(registrationErrorContainer.getAttribute('data-error-code')).toStrictEqual(
-      'NICKNAME_TOO_LONG',
-    );
+    const errors = getRegistrationFormErrors();
+    expect(errors.length).toStrictEqual(1);
+    expect(errors).toContainEqual('NICKNAME_TOO_LONG');
   });
+
+  it('shows two errors if user registers with too short nickname containing characters other than letters, numbers, hyphens, or underscores', async () => {
+    identityProviderServer.setIdentity('user');
+    await signInUser();
+
+    await registerPlayerWithNickname('n!ck');
+
+    const errors = getRegistrationFormErrors();
+    expect(errors.length).toStrictEqual(2);
+    expect(errors).toContainEqual('NICKNAME_TOO_SHORT');
+    expect(errors).toContainEqual('NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS');
+  });
+
+  it.each([{ nicknameValue: 'n!ckn4m€' }, { nicknameValue: '123nick name123' }])(
+    'shows error if user registers  with nickname containing characters other than letters, numbers, hyphens, or underscores',
+    async ({ nicknameValue }) => {
+      identityProviderServer.setIdentity('user');
+      await signInUser();
+
+      await registerPlayerWithNickname(nicknameValue);
+
+      const errors = getRegistrationFormErrors();
+
+      expect(errors).toContainEqual('NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS');
+    },
+  );
 });
 
+function getRegistrationFormErrors(): string[] {
+  const registrationErrorElements = screen.getAllByTestId('registration-form-nickname-error');
+  return registrationErrorElements.map(
+    (registrationErrorElement) =>
+      registrationErrorElement.getAttribute('data-error-code') as string,
+  );
+}
 async function registerPlayerWithNickname(nickname: string) {
   const registrationFormNicknameInput = screen.getByTestId(
     'player-registration-form-nickname-input',

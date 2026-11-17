@@ -1,3 +1,8 @@
+type NicknameErrorCode =
+  | 'NICKNAME_TOO_SHORT'
+  | 'NICKNAME_TOO_LONG'
+  | 'NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS';
+
 export type PlayerRegistrationViewModel =
   | {
       status: 'SUCCESS';
@@ -5,4 +10,9 @@ export type PlayerRegistrationViewModel =
         nickname: string;
       };
     }
-  | { status: 'FAILURE'; rejectionReason: 'NICKNAME_TOO_SHORT' | 'NICKNAME_TOO_LONG' };
+  | {
+      status: 'FAILURE';
+      rejectionReasons: {
+        nickname: NicknameErrorCode[];
+      };
+    };

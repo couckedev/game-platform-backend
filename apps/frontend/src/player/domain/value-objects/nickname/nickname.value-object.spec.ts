@@ -1,14 +1,16 @@
-import { describe, expect, it } from 'vitest';
-import { NicknameTooLongError, NicknameTooShortError } from '../../errors';
+import { assert, describe, expect, it } from 'vitest';
 import { Nickname } from './nickname-value-object';
 
 describe(Nickname.name, () => {
   it('creates nickname object containing nickname value', () => {
     const nicknameValue = 'nickname';
 
-    const nicknameValueObject = Nickname.create(nicknameValue);
+    const nicknameCreationResult = Nickname.create(nicknameValue);
 
-    expect(nicknameValueObject.value).toStrictEqual(nicknameValue);
+    expect(nicknameCreationResult).toStrictEqual({
+      status: 'SUCCESS',
+      value: new Nickname(nicknameValue),
+    });
   });
 
   it.each([
@@ -20,16 +22,18 @@ describe(Nickname.name, () => {
     { nicknameValue: 'nickna' },
     { nicknameValue: 'nicknam' },
   ])('fails to create nickname object if nickname value is too short', ({ nicknameValue }) => {
-    const nicknameValueObjectCreation = () => Nickname.create(nicknameValue);
+    const nicknameCreationResult = Nickname.create(nicknameValue);
 
-    expect(nicknameValueObjectCreation).toThrow(new NicknameTooShortError());
+    assert(nicknameCreationResult.status === 'FAILURE');
+    expect(nicknameCreationResult.errors).toContainEqual('NICKNAME_TOO_SHORT');
   });
 
   it('fails to create nickname object if nickname value length is too long', () => {
     const tooLongNicknameValue = 'nicknamenicknamenickname';
 
-    const nicknameValueObjectCreation = () => Nickname.create(tooLongNicknameValue);
+    const nicknameCreationResult = Nickname.create(tooLongNicknameValue);
 
-    expect(nicknameValueObjectCreation).toThrow(new NicknameTooLongError());
+    assert(nicknameCreationResult.status === 'FAILURE');
+    expect(nicknameCreationResult.errors).toContainEqual('NICKNAME_TOO_LONG');
   });
 });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import type { RegistrationFormVueProps } from './registration-form-vue-props.interface';
 import type { RegistrationFormVueEmits } from './registration-form-vue-emits.interface';
 
@@ -20,10 +20,10 @@ const nickname = ref('');
       v-model="nickname"
     />
     <span
-      v-if="props.registrationError !== null"
+      v-for="nicknameError of props.nicknameErrors"
       data-testid="registration-form-nickname-error"
-      :data-error-code="props.registrationError.errorCode"
-      >{{ props.registrationError.errorMessage }}</span
+      :data-error-code="nicknameError.errorCode"
+      >{{ nicknameError.errorMessage }}</span
     >
     <button type="submit" data-testid="player-registration-form-submit-button">Register</button>
   </form>

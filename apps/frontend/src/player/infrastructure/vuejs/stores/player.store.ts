@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { inject, ref } from 'vue';
-import type { PlayerRegistrationError } from '@/player/application/features/register-player';
 import type { IdentityProvider } from '@/player/infrastructure/authentication/common';
 import type { PlayerModule } from '@/player/infrastructure/composition';
 import { IdentityProviderToken, PlayerModuleToken } from '../tokens';
@@ -11,6 +10,10 @@ type PlayerAuthentication =
       status: 'NOT_REGISTERED';
     }
   | { status: 'AUTHENTICATED'; player: { nickname: string } };
+
+interface RegistrationFormErrors {
+  nickname: string[];
+}
 
 export const usePlayerStore = defineStore('player', () => {
   const identityProvider = inject<IdentityProvider>(IdentityProviderToken);
@@ -24,7 +27,9 @@ export const usePlayerStore = defineStore('player', () => {
   }
 
   const playerAuthentication = ref<PlayerAuthentication>({ status: 'SIGNED_OUT' });
-  const registrationErrorCode = ref<PlayerRegistrationError['reason'] | null>(null);
+  const registrationFormErrors = ref<RegistrationFormErrors>({
+    nickname: [],
+  });
 
   const signIn = (provider: string) => {
     identityProvider.signIn(provider);
@@ -60,7 +65,6 @@ export const usePlayerStore = defineStore('player', () => {
   };
 
   const register = (nickname: string) => {
-    registrationErrorCode.value = null;
     const request = { nickname };
     const viewModel = playerModule.registerPlayer(request);
     if (viewModel.status === 'SUCCESS') {
@@ -70,7 +74,7 @@ export const usePlayerStore = defineStore('player', () => {
       };
       return;
     }
-    registrationErrorCode.value = viewModel.rejectionReason;
+    registrationFormErrors.value = viewModel.rejectionReasons;
   };
 
   return {
@@ -79,6 +83,6 @@ export const usePlayerStore = defineStore('player', () => {
     register,
     restoreIdentity,
     playerAuthentication,
-    registrationErrorCode,
+    registrationFormErrors,
   };
 });

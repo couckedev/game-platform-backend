@@ -1,8 +1,8 @@
-interface RegistrationError {
+interface NicknameError {
   errorCode: string;
   errorMessage: string;
 }
 
 export interface RegistrationFormVueProps {
-  registrationError: RegistrationError | null;
+  nicknameErrors: NicknameError[];
 }

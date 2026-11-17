@@ -1,3 +1,5 @@
+import type { PlayerRegistrationRejectionReason } from './player-registration-rejection-reason.type';
+
 export type RegisterPlayerOutputData =
   | {
       status: 'SUCCESS';
@@ -5,4 +7,7 @@ export type RegisterPlayerOutputData =
         nickname: string;
       };
     }
-  | { status: 'FAILURE'; rejectionReason: 'NICKNAME_TOO_SHORT' | 'NICKNAME_TOO_LONG' };
+  | {
+      status: 'FAILURE';
+      rejectionReasons: PlayerRegistrationRejectionReason[];
+    };
