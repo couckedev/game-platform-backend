@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { render, screen } from '@testing-library/vue';
+import { fireEvent, render, screen } from '@testing-library/vue';
 import { createPinia } from 'pinia';
 import { beforeEach, describe, it } from 'vitest';
 import { createMemoryHistory } from 'vue-router';
@@ -76,5 +76,26 @@ describe('Player authentication', () => {
     await userEvent.click(signInWithGoogleButton);
 
     expect(screen.getByTestId('player-registration-form')).toBeInstanceOf(HTMLElement);
+  });
+
+  it('shows authenticated player nickname on main navigation when registration form hass been submitted', async () => {
+    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
+    await userEvent.click(signInNavigationLink);
+    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
+    await userEvent.click(signInWithGoogleButton);
+    const registrationForm = screen.getByTestId('player-registration-form');
+    const registrationFormNicknameInput = screen.getByTestId(
+      'player-registration-form-nickname-input',
+    );
+    await userEvent.type(registrationFormNicknameInput, 'nickname');
+
+    await fireEvent.submit(registrationForm);
+
+    expect(screen.getByTestId('authenticated-player-nickname-navigation-label')).toBeInstanceOf(
+      HTMLElement,
+    );
+    expect(
+      screen.getByTestId('authenticated-player-nickname-navigation-label').textContent,
+    ).toStrictEqual('nickname');
   });
 });

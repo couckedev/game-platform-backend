@@ -18,6 +18,11 @@ const playerStore = usePlayerStore();
   >
     Sign out
   </button>
+  <span
+    data-testid="authenticated-player-nickname-navigation-label"
+    v-if="playerStore.hasSignedIn && playerStore.currentPlayer !== null"
+    >{{ playerStore.currentPlayer.nickname }}</span
+  >
 </template>
 
 <style scoped></style>
