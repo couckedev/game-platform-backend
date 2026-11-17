@@ -100,6 +100,28 @@ describe('Player authentication', () => {
       rejectionReason: 'NICKNAME_TOO_LONG',
     });
   });
+
+  it.each([
+    { nicknameValue: 'nick1234$', forbiddenCharacter: '$' },
+    { nicknameValue: 'nick1234!', forbiddenCharacter: '!' },
+    { nicknameValue: 'nick1234?', forbiddenCharacter: '?' },
+    { nicknameValue: 'nick1234^', forbiddenCharacter: '^' },
+  ])(
+    'returns 422 if player is registering with a nickname having anything but letters, digits, hyphens or underscore (current nickname contains $forbiddenCharacter)',
+    async ({ nicknameValue }) => {
+      const registerPlayer = await app.inject({
+        method: 'POST',
+        url: PLAYER_API_URL,
+        body: { nickname: nicknameValue },
+      });
+
+      expect(registerPlayer.statusCode).toStrictEqual(422);
+      expect(JSON.parse(registerPlayer.body)).toStrictEqual({
+        rejectionReason: 'NICKNAME_FORBIDDEN_CHARACTERS',
+      });
+    },
+  );
+
   afterEach(async () => {
     await app.close();
   });
