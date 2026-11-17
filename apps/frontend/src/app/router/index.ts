@@ -12,7 +12,11 @@ import { usePlayerStore } from '@/player/infrastructure/vuejs/stores/player-stor
 const registrationRequiredGuard: NavigationGuard = (to) => {
   const playerStore = usePlayerStore();
 
-  if (playerStore.hasSignedIn && to.name !== 'sign-in') {
+  if (
+    playerStore.hasSignedIn &&
+    playerStore.authenticatedPlayer === null &&
+    to.name !== 'sign-in'
+  ) {
     return { name: 'sign-in' };
   }
 };

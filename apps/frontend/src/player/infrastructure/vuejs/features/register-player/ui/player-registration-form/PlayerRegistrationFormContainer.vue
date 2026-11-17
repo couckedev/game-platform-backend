@@ -2,11 +2,13 @@
 import { usePlayerStore } from '@/player/infrastructure/vuejs';
 import PlayerRegistrationFormView from './PlayerRegistrationFormView.vue';
 
-usePlayerStore();
+const playerStore = usePlayerStore();
+
+const onRegistrationFormSubmitted = (nickname: string) => playerStore.register(nickname);
 </script>
 
 <template>
-  <PlayerRegistrationFormView />
+  <PlayerRegistrationFormView @registration-form-submitted="onRegistrationFormSubmitted" />
 </template>
 
 <style scoped></style>

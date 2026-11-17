@@ -43,6 +43,13 @@ async function clickOnGoogleSignInButton() {
   await userEvent.click(signInWithGoogleButton);
 }
 
+async function fillAndSubmitRegistrationForm(nickname: string) {
+  const nicknameInput = screen.getByTestId('registration-form-nickname-input');
+  await userEvent.type(nicknameInput, nickname);
+  const registrationFormSubmitButton = screen.getByTestId('registration-form-submit-button');
+  await userEvent.click(registrationFormSubmitButton);
+}
+
 describe('Player authentication', () => {
   let app: RenderResult;
   let authenticationServer: InMemoryAuthenticationServer;
@@ -76,5 +83,19 @@ describe('Player authentication', () => {
     app = await openApp(authentication);
 
     expect(screen.getByTestId('player-registration-form')).toBeInstanceOf(HTMLElement);
+  });
+
+  it('shows registered player nickname on main navigation if valid registration form is submitted', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    authenticationServer.authenticate();
+    app = await openApp(authentication);
+
+    await fillAndSubmitRegistrationForm('nickname123');
+
+    const nicknameOnMainNavigation = screen.getByTestId(
+      'main-navigation-authenticated-player-nickname',
+    );
+    expect(nicknameOnMainNavigation.textContent).toStrictEqual('nickname123');
   });
 });
