@@ -8,5 +8,9 @@ export const usePlayerStore = defineStore('player', () => {
     hasSignedIn.value = true;
   };
 
-  return { signIn, hasSignedIn };
+  const signOut = () => {
+    hasSignedIn.value = false;
+  };
+
+  return { signIn, signOut, hasSignedIn };
 });

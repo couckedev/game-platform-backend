@@ -18,12 +18,14 @@ describe('Player authentication', () => {
       },
     });
   });
+
   it('shows login page when sign-in navigation link is clicked', async () => {
     const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
     await userEvent.click(signInNavigationLink);
 
     expect(screen.getByTestId('sign-in-page')).toBeInstanceOf(HTMLElement);
   });
+
   it('hides google sign in button when user has signed in', async () => {
     const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
     await userEvent.click(signInNavigationLink);
@@ -33,6 +35,7 @@ describe('Player authentication', () => {
 
     expect(() => screen.getByTestId('sign-in-with-google-button')).toThrow();
   });
+
   it('hides sign-in navigation link when user has signed in', async () => {
     const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
     await userEvent.click(signInNavigationLink);
@@ -42,6 +45,7 @@ describe('Player authentication', () => {
 
     expect(() => screen.getByTestId('sign-in-navigation-link')).toThrow();
   });
+
   it('shows sign-out navigation link when user has signed in', async () => {
     const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
     await userEvent.click(signInNavigationLink);
@@ -50,5 +54,17 @@ describe('Player authentication', () => {
     await userEvent.click(signInWithGoogleButton);
 
     expect(screen.getByTestId('sign-out-navigation-button')).toBeInstanceOf(HTMLElement);
+  });
+
+  it('hides sign-out navigation link when user has signed out', async () => {
+    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
+    await userEvent.click(signInNavigationLink);
+    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
+    await userEvent.click(signInWithGoogleButton);
+    const signOutNavigationButton = screen.getByTestId('sign-out-navigation-button');
+
+    await userEvent.click(signOutNavigationButton);
+
+    expect(() => screen.getByTestId('sign-out-navigation-button')).toThrow();
   });
 });
