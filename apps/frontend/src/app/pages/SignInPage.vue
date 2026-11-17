@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { usePlayerStore } from '../stores/player.store';
 
-const hasSignedIn = ref(false);
-
-const signInWithGoogle = () => (hasSignedIn.value = true);
+const playerStore = usePlayerStore();
 </script>
 
 <template>
   <div data-testid="sign-in-page">
     <button
-      v-if="!hasSignedIn"
+      v-if="!playerStore.hasSignedIn"
       type="button"
       data-testid="sign-in-with-google-button"
-      @click="signInWithGoogle"
+      @click="playerStore.signIn"
     >
       Sign in with Google
     </button>

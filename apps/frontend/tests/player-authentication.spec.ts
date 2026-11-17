@@ -22,7 +22,7 @@ describe('Player authentication', () => {
     const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
     await userEvent.click(signInNavigationLink);
 
-    await expect(screen.findByTestId('sign-in-page')).resolves.toBeInstanceOf(HTMLElement);
+    expect(screen.getByTestId('sign-in-page')).toBeInstanceOf(HTMLElement);
   });
   it('hides google sign in button when user has signed in', async () => {
     const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
@@ -31,6 +31,15 @@ describe('Player authentication', () => {
 
     await userEvent.click(signInWithGoogleButton);
 
-    await expect(screen.findByTestId('sign-in-with-google-button')).rejects.toThrow();
+    expect(() => screen.getByTestId('sign-in-with-google-button')).toThrow();
+  });
+  it('hides sign-in navigation link when user has signed in', async () => {
+    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
+    await userEvent.click(signInNavigationLink);
+    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
+
+    await userEvent.click(signInWithGoogleButton);
+
+    expect(() => screen.getByTestId('sign-in-navigation-link')).toThrow();
   });
 });
