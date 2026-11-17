@@ -67,4 +67,14 @@ describe('Player authentication', () => {
 
     expect(() => screen.getByTestId('sign-out-navigation-button')).toThrow();
   });
+
+  it('shows registration form if unregistered user has signed in', async () => {
+    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
+    await userEvent.click(signInNavigationLink);
+    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
+
+    await userEvent.click(signInWithGoogleButton);
+
+    expect(screen.getByTestId('player-registration-form')).toBeInstanceOf(HTMLElement);
+  });
 });

@@ -14,6 +14,11 @@ const playerStore = usePlayerStore();
     >
       Sign in with Google
     </button>
+
+    <form
+      data-testid="player-registration-form"
+      v-if="playerStore.hasSignedIn && !playerStore.isRegistered"
+    ></form>
   </div>
 </template>
 
