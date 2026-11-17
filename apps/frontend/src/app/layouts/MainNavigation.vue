@@ -20,8 +20,8 @@ const playerStore = usePlayerStore();
   </button>
   <span
     data-testid="authenticated-player-nickname-navigation-label"
-    v-if="playerStore.hasSignedIn && playerStore.currentPlayer !== null"
-    >{{ playerStore.currentPlayer.nickname }}</span
+    v-if="playerStore.hasSignedIn && playerStore.authenticatedPlayer !== null"
+    >{{ playerStore.authenticatedPlayer.nickname }}</span
   >
 </template>
 

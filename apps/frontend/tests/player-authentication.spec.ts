@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { fireEvent, render, screen } from '@testing-library/vue';
+import { render, screen } from '@testing-library/vue';
 import { createPinia } from 'pinia';
 import { beforeEach, describe, it } from 'vitest';
 import { createMemoryHistory } from 'vue-router';
@@ -27,69 +27,40 @@ describe('Player authentication', () => {
   });
 
   it('hides google sign in button when user has signed in', async () => {
-    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
-    await userEvent.click(signInNavigationLink);
-    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
-
-    await userEvent.click(signInWithGoogleButton);
+    await signInUser();
 
     expect(() => screen.getByTestId('sign-in-with-google-button')).toThrow();
   });
 
   it('hides sign-in navigation link when user has signed in', async () => {
-    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
-    await userEvent.click(signInNavigationLink);
-    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
-
-    await userEvent.click(signInWithGoogleButton);
+    await signInUser();
 
     expect(() => screen.getByTestId('sign-in-navigation-link')).toThrow();
   });
 
   it('shows sign-out navigation link when user has signed in', async () => {
-    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
-    await userEvent.click(signInNavigationLink);
-    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
-
-    await userEvent.click(signInWithGoogleButton);
+    await signInUser();
 
     expect(screen.getByTestId('sign-out-navigation-button')).toBeInstanceOf(HTMLElement);
   });
 
   it('hides sign-out navigation link when user has signed out', async () => {
-    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
-    await userEvent.click(signInNavigationLink);
-    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
-    await userEvent.click(signInWithGoogleButton);
-    const signOutNavigationButton = screen.getByTestId('sign-out-navigation-button');
+    await signInUser();
 
-    await userEvent.click(signOutNavigationButton);
+    await signOutUser();
 
     expect(() => screen.getByTestId('sign-out-navigation-button')).toThrow();
   });
 
   it('shows registration form if unregistered user has signed in', async () => {
-    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
-    await userEvent.click(signInNavigationLink);
-    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
-
-    await userEvent.click(signInWithGoogleButton);
+    await signInUser();
 
     expect(screen.getByTestId('player-registration-form')).toBeInstanceOf(HTMLElement);
   });
 
   it('shows authenticated player nickname on main navigation when registration form hass been submitted', async () => {
-    const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
-    await userEvent.click(signInNavigationLink);
-    const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
-    await userEvent.click(signInWithGoogleButton);
-    const registrationForm = screen.getByTestId('player-registration-form');
-    const registrationFormNicknameInput = screen.getByTestId(
-      'player-registration-form-nickname-input',
-    );
-    await userEvent.type(registrationFormNicknameInput, 'nickname');
-
-    await fireEvent.submit(registrationForm);
+    await signInUser();
+    await registerPlayerWithNickname('nickname');
 
     expect(screen.getByTestId('authenticated-player-nickname-navigation-label')).toBeInstanceOf(
       HTMLElement,
@@ -98,4 +69,36 @@ describe('Player authentication', () => {
       screen.getByTestId('authenticated-player-nickname-navigation-label').textContent,
     ).toStrictEqual('nickname');
   });
+
+  it('shows registration form if user 1 signs in, registered, signs out and user 2 signs in', async () => {
+    await signInUser();
+    await registerPlayerWithNickname('player1');
+    await signOutUser();
+
+    await signInUser();
+
+    expect(screen.getByTestId('player-registration-form')).toBeInstanceOf(HTMLElement);
+  });
 });
+
+async function registerPlayerWithNickname(nickname: string) {
+  const registrationFormNicknameInput = screen.getByTestId(
+    'player-registration-form-nickname-input',
+  );
+  const registrationFormSubmitButton = screen.getByTestId('player-registration-form-submit-button');
+  await userEvent.type(registrationFormNicknameInput, nickname);
+  await userEvent.click(registrationFormSubmitButton);
+}
+
+async function signInUser() {
+  const signInNavigationLink = screen.getByTestId('sign-in-navigation-link');
+  await userEvent.click(signInNavigationLink);
+  const signInWithGoogleButton = screen.getByTestId('sign-in-with-google-button');
+  await userEvent.click(signInWithGoogleButton);
+}
+
+async function signOutUser() {
+  const signOutNavigationButton = screen.getByTestId('sign-out-navigation-button');
+
+  await userEvent.click(signOutNavigationButton);
+}

@@ -7,7 +7,7 @@ interface AuthenticatedPlayer {
 
 export const usePlayerStore = defineStore('player', () => {
   const hasSignedIn = ref(false);
-  const currentPlayer = ref<AuthenticatedPlayer | null>(null);
+  const authenticatedPlayer = ref<AuthenticatedPlayer | null>(null);
 
   const signIn = () => {
     hasSignedIn.value = true;
@@ -15,11 +15,12 @@ export const usePlayerStore = defineStore('player', () => {
 
   const signOut = () => {
     hasSignedIn.value = false;
+    authenticatedPlayer.value = null;
   };
 
   const register = (nickname: string) => {
-    currentPlayer.value = { nickname };
+    authenticatedPlayer.value = { nickname };
   };
 
-  return { signIn, signOut, register, hasSignedIn, currentPlayer };
+  return { signIn, signOut, register, hasSignedIn, authenticatedPlayer };
 });

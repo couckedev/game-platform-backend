@@ -22,11 +22,11 @@ const handlePlayerRegistrationFormSubmit = (event: SubmitEvent) => {
 
     <form
       data-testid="player-registration-form"
-      v-if="playerStore.hasSignedIn && playerStore.currentPlayer === null"
+      v-if="playerStore.hasSignedIn && playerStore.authenticatedPlayer === null"
       @submit="handlePlayerRegistrationFormSubmit"
     >
       <input type="text" data-testid="player-registration-form-nickname-input" name="nickname" />
-      <button type="submit">Register</button>
+      <button type="submit" data-testid="player-registration-form-submit-button">Register</button>
     </form>
   </div>
 </template>
