@@ -1,3 +1,5 @@
+import type { Nickname } from '../value-objects/';
+
 export interface Player {
-  nickname: string;
+  nickname: Nickname;
 }

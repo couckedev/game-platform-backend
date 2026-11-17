@@ -147,6 +147,17 @@ describe('Player authentication', () => {
     expect(authenticatedPlayerNicknameNavigationlabel).toBeInstanceOf(HTMLElement);
     expect(authenticatedPlayerNicknameNavigationlabel.textContent).toStrictEqual('nickname');
   });
+
+  it('shows error if user registers with nickname too short ', async () => {
+    identityProviderServer.setIdentity('user');
+    await signInUser();
+    await registerPlayerWithNickname('nick');
+
+    const playerRegistrationFormNicknameTooShortError = screen.getByTestId(
+      'player-registration-form-nickname-too-short-error',
+    );
+    expect(playerRegistrationFormNicknameTooShortError).toBeInstanceOf(HTMLElement);
+  });
 });
 
 async function registerPlayerWithNickname(nickname: string) {
@@ -154,6 +165,7 @@ async function registerPlayerWithNickname(nickname: string) {
     'player-registration-form-nickname-input',
   );
   const registrationFormSubmitButton = screen.getByTestId('player-registration-form-submit-button');
+  await userEvent.clear(registrationFormNicknameInput);
   await userEvent.type(registrationFormNicknameInput, nickname);
   await userEvent.click(registrationFormSubmitButton);
 }

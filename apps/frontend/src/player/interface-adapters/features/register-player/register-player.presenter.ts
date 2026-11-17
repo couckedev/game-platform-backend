@@ -8,9 +8,16 @@ export class RegisterPlayerPresenter implements RegisterPlayerOutput {
   private _viewModel: PlayerRegistrationViewModel | null = null;
 
   present(outputData: RegisterPlayerOutputData): void {
+    if (outputData.status === 'SUCCESS') {
+      this._viewModel = {
+        status: 'SUCCESS',
+        registeredPlayer: outputData.registeredPlayer,
+      };
+      return;
+    }
     this._viewModel = {
-      status: 'SUCCESS',
-      registeredPlayer: outputData.registeredPlayer,
+      status: 'FAILURE',
+      rejectionReason: 'NICKNAME_TOO_SHORT',
     };
   }
 

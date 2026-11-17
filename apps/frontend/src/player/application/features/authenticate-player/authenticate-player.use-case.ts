@@ -18,7 +18,7 @@ export class AuthenticatePlayerUseCase {
     this.output.present({
       status: 'FOUND',
       authenticatedPlayer: {
-        nickname: authenticatedPlayer.nickname,
+        nickname: authenticatedPlayer.nickname.value,
       },
     });
     return;

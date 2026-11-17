@@ -11,6 +11,8 @@ type PlayerAuthentication =
     }
   | { status: 'AUTHENTICATED'; player: { nickname: string } };
 
+type NicknameRejectionReason = 'NICKNAME_TOO_SHORT';
+
 export const usePlayerStore = defineStore('player', () => {
   const identityProvider = inject<IdentityProvider>(IdentityProviderToken);
   if (identityProvider === undefined) {
@@ -23,6 +25,7 @@ export const usePlayerStore = defineStore('player', () => {
   }
 
   const playerAuthentication = ref<PlayerAuthentication>({ status: 'SIGNED_OUT' });
+  const registrationErrors = ref<NicknameRejectionReason[]>([]);
 
   const signIn = (provider: string) => {
     identityProvider.signIn(provider);
@@ -60,10 +63,14 @@ export const usePlayerStore = defineStore('player', () => {
   const register = (nickname: string) => {
     const request = { nickname };
     const viewModel = playerModule.registerPlayer(request);
-    playerAuthentication.value = {
-      status: 'AUTHENTICATED',
-      player: viewModel.registeredPlayer,
-    };
+    if (viewModel.status === 'SUCCESS') {
+      playerAuthentication.value = {
+        status: 'AUTHENTICATED',
+        player: viewModel.registeredPlayer,
+      };
+      return;
+    }
+    registrationErrors.value.push(viewModel.rejectionReason);
   };
 
   return { signIn, signOut, register, restoreIdentity, playerAuthentication };

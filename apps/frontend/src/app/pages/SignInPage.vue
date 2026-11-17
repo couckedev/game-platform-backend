@@ -28,6 +28,9 @@ const handleSignInWithGoogleButtonClick = () => playerStore.signIn('google');
       @submit="handlePlayerRegistrationFormSubmit"
     >
       <input type="text" data-testid="player-registration-form-nickname-input" name="nickname" />
+      <span data-testid="player-registration-form-nickname-too-short-error"
+        >Nickname is too short</span
+      >
       <button type="submit" data-testid="player-registration-form-submit-button">Register</button>
     </form>
   </div>
