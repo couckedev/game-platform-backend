@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePlayerStore } from '../stores/player.store';
+import { usePlayerStore } from '@/player/infrastructure/vuejs/stores';
 
 const playerStore = usePlayerStore();
 </script>

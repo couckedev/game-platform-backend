@@ -107,7 +107,7 @@ describe('Player authentication', () => {
   it('shows registration form if user 1 signs in, registered, signs out and user 2 signs in', async () => {
     identityProviderServer.setIdentity('user1');
     await signInUser();
-    await registerPlayerWithNickname('player1');
+    await registerPlayerWithNickname('player-1');
     await signOutUser();
 
     identityProviderServer.setIdentity('user2');
@@ -153,21 +153,21 @@ describe('Player authentication', () => {
     await signInUser();
     await registerPlayerWithNickname('nick');
 
-    const playerRegistrationFormNicknameTooShortError = screen.getByTestId(
-      'player-registration-form-nickname-too-short-error',
+    const registrationErrorContainer = screen.getByTestId('registration-form-nickname-error');
+    expect(registrationErrorContainer.getAttribute('data-error-code')).toStrictEqual(
+      'NICKNAME_TOO_SHORT',
     );
-    expect(playerRegistrationFormNicknameTooShortError).toBeInstanceOf(HTMLElement);
   });
 
-  it('shows error if user registers with nickname too long ', async () => {
+  it('shows error if user registers with too long nickname', async () => {
     identityProviderServer.setIdentity('user');
     await signInUser();
     await registerPlayerWithNickname('nicknamenicknamenicknamenickname');
 
-    const playerRegistrationFormNicknameTooLongError = screen.getByTestId(
-      'player-registration-form-nickname-too-long-error',
+    const registrationErrorContainer = screen.getByTestId('registration-form-nickname-error');
+    expect(registrationErrorContainer.getAttribute('data-error-code')).toStrictEqual(
+      'NICKNAME_TOO_LONG',
     );
-    expect(playerRegistrationFormNicknameTooLongError).toBeInstanceOf(HTMLElement);
   });
 });
 

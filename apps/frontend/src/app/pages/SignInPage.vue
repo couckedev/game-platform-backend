@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { usePlayerStore } from '../stores/player.store';
+import { RegistrationForm } from '@/player/infrastructure/vuejs/features/register-player';
+import { usePlayerStore } from '@/player/infrastructure/vuejs/stores';
 
 const playerStore = usePlayerStore();
 
@@ -22,20 +23,10 @@ const handleSignInWithGoogleButtonClick = () => playerStore.signIn('google');
       Sign in with Google
     </button>
 
-    <form
+    <RegistrationForm
       data-testid="player-registration-form"
       v-if="playerStore.playerAuthentication.status === 'NOT_REGISTERED'"
-      @submit="handlePlayerRegistrationFormSubmit"
-    >
-      <input type="text" data-testid="player-registration-form-nickname-input" name="nickname" />
-      <span data-testid="player-registration-form-nickname-too-short-error"
-        >Nickname is too short</span
-      >
-      <span data-testid="player-registration-form-nickname-too-long-error"
-        >Nickname is too long</span
-      >
-      <button type="submit" data-testid="player-registration-form-submit-button">Register</button>
-    </form>
+    />
   </div>
 </template>
 

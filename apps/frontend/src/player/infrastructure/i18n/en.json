@@ -1,0 +1,11 @@
+{
+  "player": {
+    "registration": {
+      "submit": "Register",
+      "errors": {
+        "NICKNAME_TOO_SHORT": "Nickname is too short",
+        "NICKNAME_TOO_LONG": "Nickname is too long"
+      }
+    }
+  }
+}

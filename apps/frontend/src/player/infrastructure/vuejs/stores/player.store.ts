@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { inject, ref } from 'vue';
+import type { PlayerRegistrationError } from '@/player/application/features/register-player';
 import type { IdentityProvider } from '@/player/infrastructure/authentication/common';
 import type { PlayerModule } from '@/player/infrastructure/composition';
 import { IdentityProviderToken, PlayerModuleToken } from '../tokens';
@@ -10,8 +11,6 @@ type PlayerAuthentication =
       status: 'NOT_REGISTERED';
     }
   | { status: 'AUTHENTICATED'; player: { nickname: string } };
-
-type NicknameRejectionReason = 'NICKNAME_TOO_SHORT' | 'NICKNAME_TOO_LONG';
 
 export const usePlayerStore = defineStore('player', () => {
   const identityProvider = inject<IdentityProvider>(IdentityProviderToken);
@@ -25,7 +24,7 @@ export const usePlayerStore = defineStore('player', () => {
   }
 
   const playerAuthentication = ref<PlayerAuthentication>({ status: 'SIGNED_OUT' });
-  const registrationErrors = ref<NicknameRejectionReason[]>([]);
+  const registrationErrorCode = ref<PlayerRegistrationError['reason'] | null>(null);
 
   const signIn = (provider: string) => {
     identityProvider.signIn(provider);
@@ -61,6 +60,7 @@ export const usePlayerStore = defineStore('player', () => {
   };
 
   const register = (nickname: string) => {
+    registrationErrorCode.value = null;
     const request = { nickname };
     const viewModel = playerModule.registerPlayer(request);
     if (viewModel.status === 'SUCCESS') {
@@ -70,8 +70,15 @@ export const usePlayerStore = defineStore('player', () => {
       };
       return;
     }
-    registrationErrors.value.push(viewModel.rejectionReason);
+    registrationErrorCode.value = viewModel.rejectionReason;
   };
 
-  return { signIn, signOut, register, restoreIdentity, playerAuthentication };
+  return {
+    signIn,
+    signOut,
+    register,
+    restoreIdentity,
+    playerAuthentication,
+    registrationErrorCode,
+  };
 });

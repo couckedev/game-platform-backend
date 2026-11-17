@@ -1,10 +1,5 @@
-import {
-  Nickname,
-  NicknameTooLongError,
-  NicknameTooShortError,
-  type Player,
-  type PlayerRepository,
-} from '@/player/domain';
+import { Nickname, type Player, type PlayerRepository } from '@/player/domain';
+import { isPlayerRegistrationError } from './player-registration-error.type';
 import type { RegisterPlayerInputData } from './register-player.input-data';
 import type { RegisterPlayerOutput } from './register-player-output.port';
 
@@ -27,7 +22,7 @@ export class RegisterPlayerUseCase {
         },
       });
     } catch (error) {
-      if (error instanceof NicknameTooShortError || error instanceof NicknameTooLongError) {
+      if (isPlayerRegistrationError(error)) {
         this.output.present({
           status: 'FAILURE',
           rejectionReason: error.reason,
