@@ -1,0 +1,19 @@
+{
+  "name": "game-platform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "biome check",
+    "format": "biome check --write",
+    "ci:check": "biome ci"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.34.5",
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15"
+  }
+}
