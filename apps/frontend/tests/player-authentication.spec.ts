@@ -148,11 +148,19 @@ describe('Player authentication', () => {
     expect(authenticatedPlayerNicknameNavigationlabel.textContent).toStrictEqual('nickname');
   });
 
-  it('shows error if user registers with nickname too short ', async () => {
+  it.each([
+    { nicknameValue: 'n' },
+    { nicknameValue: 'ni' },
+    { nicknameValue: 'nic' },
+    { nicknameValue: 'nick' },
+    { nicknameValue: 'nickn' },
+    { nicknameValue: 'nickna' },
+    { nicknameValue: 'nicknam' },
+  ])('shows error if user registers with too short nickname', async ({ nicknameValue }) => {
     identityProviderServer.setIdentity('user');
     await signInUser();
 
-    await registerPlayerWithNickname('nick');
+    await registerPlayerWithNickname(nicknameValue);
 
     const errors = getRegistrationFormErrors();
     expect(errors.length).toStrictEqual(1);
