@@ -203,6 +203,18 @@ describe('Player authentication', () => {
       expect(errors).toContainEqual('NICKNAME_CONTAINS_FORBIDDEN_CHARACTERS');
     },
   );
+
+  it('shows two errors if user registers with too long nickname containing too few letters', async () => {
+    identityProviderServer.setIdentity('user');
+    await signInUser();
+
+    await registerPlayerWithNickname('123456789123456789123456');
+
+    const errors = getRegistrationFormErrors();
+    expect(errors.length).toStrictEqual(2);
+    expect(errors).toContainEqual('NICKNAME_TOO_LONG');
+    expect(errors).toContainEqual('NICKNAME_TOO_FEW_LETTERS');
+  });
 });
 
 function getRegistrationFormErrors(): string[] {
