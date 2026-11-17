@@ -7,10 +7,11 @@ import { RegisterPlayerRequest } from './register-player.request';
 export class RegisterPlayerController {
   constructor(private readonly useCase: RegisterPlayerUseCase) {}
 
-  handle(request: RegisterPlayerRequest): void {
+  async handle(request: RegisterPlayerRequest) {
     const inputData: RegisterPlayerInputData = {
       nickname: request.nickname,
+      externalAccountId: request.externalAccountId,
     };
-    this.useCase.execute(inputData);
+    await this.useCase.execute(inputData);
   }
 }

@@ -1,1 +1,2 @@
-export { PlayerModule } from './player.module';
+export { PlayerModule } from './modules/player.module';
+export { PlayerTestingModule } from './modules/player-testing.module';

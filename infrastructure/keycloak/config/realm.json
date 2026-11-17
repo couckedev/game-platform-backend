@@ -1,0 +1,138 @@
+{
+  "realm": "game-platform",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 300,
+  "refreshTokenMaxReuse": 0,
+
+  "clients": [
+    {
+      "clientId": "game-platform-backend-swagger",
+      "name": "Game platform backend Swagger UI",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect",
+
+      "redirectUris": ["$(env:BACKEND_URL)/*"],
+
+      "webOrigins": ["+", "$(env:BACKEND_URL)"],
+
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "+"
+      },
+
+      "protocolMappers": [
+        {
+          "name": "game-platform-backend-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "game-platform-backend",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    },
+
+    {
+      "clientId": "game-platform-frontend",
+      "name": "Game Platform Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect",
+
+      "redirectUris": ["$(env:FRONTEND_URL)/*"],
+
+      "webOrigins": ["$(env:FRONTEND_URL)"],
+
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "+"
+      },
+
+      "protocolMappers": [
+        {
+          "name": "game-platform-backend-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "game-platform-backend",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    }
+  ],
+
+  "roles": {
+    "realm": [
+      {
+        "name": "player",
+        "description": "Standard game player"
+      }
+    ]
+  },
+
+  "defaultRoles": ["player"],
+
+  "identityProviders": [
+    {
+      "alias": "google",
+      "displayName": "Google",
+      "providerId": "google",
+      "enabled": true,
+      "trustEmail": true,
+      "storeToken": false,
+      "addReadTokenRoleOnCreate": false,
+      "authenticateByDefault": false,
+      "linkOnly": false,
+      "firstBrokerLoginFlowAlias": "first broker login",
+
+      "config": {
+        "clientId": "$(env:GOOGLE_CLIENT_ID)",
+        "clientSecret": "$(env:GOOGLE_CLIENT_SECRET)",
+        "defaultScope": "openid profile email",
+        "syncMode": "IMPORT"
+      }
+    }
+  ],
+
+  "users": [
+    {
+      "username": "testplayer",
+      "email": "testplayer@game-platform.local",
+      "firstName": "Test",
+      "lastName": "Player",
+      "enabled": true,
+      "emailVerified": true,
+
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+
+      "realmRoles": ["player"]
+    }
+  ]
+}

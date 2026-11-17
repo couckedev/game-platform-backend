@@ -1,5 +1,5 @@
 import { FastifyReply } from 'fastify';
-import { PlayerRegistrationViewModel } from '@/player/interface-adapters/register-player/player-registration.view-model';
+import { PlayerRegistrationViewModel } from '@/player/interface-adapters/register-player';
 
 export class FastifyPlayerRegistrationView {
   constructor(private readonly httpResponse: FastifyReply) {}

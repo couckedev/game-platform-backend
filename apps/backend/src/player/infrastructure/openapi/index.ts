@@ -7,7 +7,3 @@ export {
   badRequestResponse,
 } from './bad-request-response.schema';
 export { playerModuleRegistry } from './player-module-registry';
-export {
-  type UnprocessablePlayerRegistrationResponse,
-  unprocessablePlayerRegistrationResponseSchema,
-} from './unprocessable-player-registration-response.schema';

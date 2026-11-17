@@ -1,5 +1,5 @@
 import { RegisterPlayerUseCase } from '@/player/application/register-player';
-import { NicknameRegistry } from '@/player/domain';
+import { PlayerRepository, UniqueIdGenerator } from '@/player/domain';
 import {
   RegisterPlayerController,
   RegisterPlayerPresenter,
@@ -8,14 +8,15 @@ import {
 import { RegisterPlayerFeature } from './register-player-feature.type';
 
 export const provideRegisterPlayerFeature = (
-  nicknameRegistry: NicknameRegistry,
+  playerRepository: PlayerRepository,
+  uniqueIdGenerator: UniqueIdGenerator,
 ): RegisterPlayerFeature => {
   const presenter = new RegisterPlayerPresenter();
-  const useCase = new RegisterPlayerUseCase(presenter, nicknameRegistry);
+  const useCase = new RegisterPlayerUseCase(presenter, uniqueIdGenerator, playerRepository);
   const controller = new RegisterPlayerController(useCase);
 
-  return (request: RegisterPlayerRequest) => {
-    controller.handle(request);
+  return async (request: RegisterPlayerRequest) => {
+    await controller.handle(request);
     return presenter.requireViewModel();
   };
 };

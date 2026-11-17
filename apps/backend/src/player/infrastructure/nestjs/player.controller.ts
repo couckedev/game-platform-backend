@@ -1,29 +1,49 @@
-import { Body, Controller, Get, Inject, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Res, UseGuards } from '@nestjs/common';
 import type { FastifyReply } from 'fastify';
+import type { AuthenticatedIdentity } from '@/player/infrastructure/authentication/common';
+import {
+  type AuthenticatePlayerFeature,
+  FastifyPlayerAuthenticationView,
+} from '@/player/infrastructure/features/authenticate-player';
+
 import {
   FastifyPlayerRegistrationView,
   type RegisterPlayerFeature,
   type RegisterPlayerRequestBody,
   registerPlayerRequestBodySchema,
 } from '@/player/infrastructure/features/register-player';
-import { RegisterPlayerFeatureToken } from './tokens';
+import { AuthenticationGuard } from './authentication.guard';
+import { Identity } from './identity.decorator';
+import { AuthenticatePlayerFeatureToken, RegisterPlayerFeatureToken } from './tokens';
 
 @Controller('players')
 export class PlayerController {
   constructor(
-    @Inject(RegisterPlayerFeatureToken)
-    private readonly _registerPlayer: RegisterPlayerFeature,
+    @Inject(RegisterPlayerFeatureToken) private readonly _registerPlayer: RegisterPlayerFeature,
+    @Inject(AuthenticatePlayerFeatureToken)
+    private readonly _authenticatePlayer: AuthenticatePlayerFeature,
   ) {}
 
   @Get('me')
-  getCurrentPlayer(@Res({ passthrough: true }) response: FastifyReply) {
-    response.status(404).send({ message: 'Player not found' });
+  @UseGuards(AuthenticationGuard)
+  async getCurrentPlayer(
+    @Identity() identity: AuthenticatedIdentity,
+    @Res({ passthrough: true }) response: FastifyReply,
+  ) {
+    const playerAuthenticationViewModel = await this._authenticatePlayer({
+      externalAccountId: identity.externalAccountId,
+    });
+
+    const view = new FastifyPlayerAuthenticationView(response);
+    view.render(playerAuthenticationViewModel);
   }
 
   @Post()
-  register(
+  @UseGuards(AuthenticationGuard)
+  async register(
     @Body()
     requestBody: RegisterPlayerRequestBody,
+    @Identity() identity: AuthenticatedIdentity,
     @Res({ passthrough: true }) response: FastifyReply,
   ) {
     const requestValidation = registerPlayerRequestBodySchema.safeParse(requestBody);
@@ -36,7 +56,10 @@ export class PlayerController {
       });
       return;
     }
-    const playerRegistrationViewModel = this._registerPlayer(requestBody);
+    const playerRegistrationViewModel = await this._registerPlayer({
+      ...requestBody,
+      externalAccountId: identity.externalAccountId,
+    });
     const view = new FastifyPlayerRegistrationView(response);
     view.render(playerRegistrationViewModel);
   }

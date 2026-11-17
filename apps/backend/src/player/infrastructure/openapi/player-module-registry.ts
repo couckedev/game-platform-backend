@@ -1,9 +1,16 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import z from 'zod';
-import { registerPlayerRequestBodySchema } from '@/player/infrastructure/features/register-player';
+import {
+  playerFoundResponseSchema,
+  playerNotFoundResponseSchema,
+} from '@/player/infrastructure/features/authenticate-player';
+import {
+  conflictPlayerRegistrationResponseSchema,
+  playerCreatedResponseSchema,
+  registerPlayerRequestBodySchema,
+  unprocessablePlayerRegistrationResponseSchema,
+} from '@/player/infrastructure/features/register-player';
 import { badRequestResponse } from './bad-request-response.schema';
-import { authenticatePlayerNotFoundResponseSchema } from './player-not-found-response.schema';
-import { unprocessablePlayerRegistrationResponseSchema } from './unprocessable-player-registration-response.schema';
+import { unauthorizedResponseSchema } from './unauthorized-response.schema';
 
 export const playerModuleRegistry = new OpenAPIRegistry();
 
@@ -11,12 +18,21 @@ playerModuleRegistry.registerPath({
   method: 'get',
   path: '/players/me',
   summary: 'Get current player',
+  security: [{ keycloak: ['openid', 'profile', 'email'] }],
   responses: {
+    200: {
+      description: 'Player found',
+      content: { 'application/json': { schema: playerFoundResponseSchema } },
+    },
+    401: {
+      description: 'Missing or invalid bearer token',
+      content: { 'application/json': { schema: unauthorizedResponseSchema } },
+    },
     404: {
       description: 'Player not found',
       content: {
         'application/json': {
-          schema: authenticatePlayerNotFoundResponseSchema,
+          schema: playerNotFoundResponseSchema,
         },
       },
     },
@@ -27,6 +43,7 @@ playerModuleRegistry.registerPath({
   method: 'post',
   path: '/players',
   summary: 'Register a player',
+  security: [{ keycloak: ['openid', 'profile', 'email'] }],
   request: {
     body: {
       content: {
@@ -39,11 +56,15 @@ playerModuleRegistry.registerPath({
   responses: {
     201: {
       description: 'Player registered',
-      content: {
-        'application/json': {
-          schema: z.object({}),
-        },
-      },
+      content: { 'application/json': { schema: playerCreatedResponseSchema } },
+    },
+    401: {
+      description: 'Missing or invalid bearer token',
+      content: { 'application/json': { schema: unauthorizedResponseSchema } },
+    },
+    409: {
+      description: 'Nickname is already taken',
+      content: { 'application/json': { schema: conflictPlayerRegistrationResponseSchema } },
     },
     400: {
       description: 'Bad request',

@@ -1,4 +1,4 @@
-import { Nickname, NicknameAlreadyTakenError, NicknameRegistry } from '@/player/domain';
+import { Nickname, Player, PlayerRepository, UniqueIdGenerator } from '@/player/domain';
 import { isPlayerRegistrationError } from './player-registration-error.type';
 import { RegisterPlayerInputData } from './register-player.input-data';
 import { RegisterPlayerOutput } from './register-player-output.port';
@@ -6,20 +6,22 @@ import { RegisterPlayerOutput } from './register-player-output.port';
 export class RegisterPlayerUseCase {
   constructor(
     private readonly output: RegisterPlayerOutput,
-    private readonly nicknameRegistry: NicknameRegistry,
+    private readonly uniqueIdGenerator: UniqueIdGenerator,
+    private readonly playerRepository: PlayerRepository,
   ) {}
 
-  execute(inputData: RegisterPlayerInputData) {
+  async execute(inputData: RegisterPlayerInputData) {
     try {
       const nickname = Nickname.create(inputData.nickname);
-      this.nicknameRegistry.register(nickname);
+      const player: Player = {
+        id: this.uniqueIdGenerator.generate(),
+        externalAccountId: inputData.externalAccountId,
+        nickname,
+      };
+      await this.playerRepository.register(player);
       this.output.present({ status: 'SUCCESS' });
       return;
     } catch (error) {
-      if (error instanceof NicknameAlreadyTakenError) {
-        this.output.present({ status: 'FAILURE', reason: 'NICKNAME_ALREADY_TAKEN' });
-        return;
-      }
       if (isPlayerRegistrationError(error)) {
         this.output.present({ status: 'FAILURE', reason: error.reason });
         return;

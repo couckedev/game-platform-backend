@@ -1,1 +1,2 @@
-export type { NicknameRegistry } from './nickname-registry.port';
+export type { PlayerRepository } from './player-repository.port';
+export type { UniqueIdGenerator } from './unique-id-generator.port';
