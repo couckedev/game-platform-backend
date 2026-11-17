@@ -1,0 +1,23 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+    "root": false,
+    "extends": "//",
+    "overrides": [
+        {
+            "includes": [
+                "**/*.spec.ts",
+                "tests/**"
+            ],
+            "linter": {
+                "rules": {
+                    "suspicious": {
+                        "noExplicitAny": "off"
+                    },
+                    "style": {
+                        "noNonNullAssertion": "off"
+                    }
+                }
+            }
+        }
+    ]
+}
