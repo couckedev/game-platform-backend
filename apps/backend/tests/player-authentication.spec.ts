@@ -50,6 +50,20 @@ describe('Player authentication', () => {
     });
   });
 
+  it('returns 400 if player is registering with empty nickname', async () => {
+    const registerPlayer = await app.inject({
+      method: 'POST',
+      url: PLAYER_API_URL,
+      body: { nickname: '' },
+    });
+
+    expect(registerPlayer.statusCode).toStrictEqual(400);
+    const responseBody = JSON.parse(registerPlayer.body);
+    expect(responseBody.errors).toContainEqual(
+      expect.objectContaining({ message: 'nickname cannot be empty' }),
+    );
+  });
+
   afterEach(async () => {
     await app.close();
   });
