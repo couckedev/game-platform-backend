@@ -11,7 +11,7 @@ type PlayerAuthentication =
     }
   | { status: 'AUTHENTICATED'; player: { nickname: string } };
 
-type NicknameRejectionReason = 'NICKNAME_TOO_SHORT';
+type NicknameRejectionReason = 'NICKNAME_TOO_SHORT' | 'NICKNAME_TOO_LONG';
 
 export const usePlayerStore = defineStore('player', () => {
   const identityProvider = inject<IdentityProvider>(IdentityProviderToken);

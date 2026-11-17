@@ -1,6 +1,10 @@
-import type { Player, PlayerRepository } from '@/player/domain';
-import { NicknameTooShortError } from '@/player/domain/errors';
-import { Nickname } from '@/player/domain/value-objects';
+import {
+  Nickname,
+  NicknameTooLongError,
+  NicknameTooShortError,
+  type Player,
+  type PlayerRepository,
+} from '@/player/domain';
 import type { RegisterPlayerInputData } from './register-player.input-data';
 import type { RegisterPlayerOutput } from './register-player-output.port';
 
@@ -23,7 +27,7 @@ export class RegisterPlayerUseCase {
         },
       });
     } catch (error) {
-      if (error instanceof NicknameTooShortError) {
+      if (error instanceof NicknameTooShortError || error instanceof NicknameTooLongError) {
         this.output.present({
           status: 'FAILURE',
           rejectionReason: error.reason,

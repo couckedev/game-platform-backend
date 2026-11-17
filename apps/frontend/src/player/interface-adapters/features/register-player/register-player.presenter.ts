@@ -17,7 +17,7 @@ export class RegisterPlayerPresenter implements RegisterPlayerOutput {
     }
     this._viewModel = {
       status: 'FAILURE',
-      rejectionReason: 'NICKNAME_TOO_SHORT',
+      rejectionReason: outputData.rejectionReason,
     };
   }
 

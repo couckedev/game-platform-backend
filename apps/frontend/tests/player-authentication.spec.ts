@@ -158,6 +158,17 @@ describe('Player authentication', () => {
     );
     expect(playerRegistrationFormNicknameTooShortError).toBeInstanceOf(HTMLElement);
   });
+
+  it('shows error if user registers with nickname too long ', async () => {
+    identityProviderServer.setIdentity('user');
+    await signInUser();
+    await registerPlayerWithNickname('nicknamenicknamenicknamenickname');
+
+    const playerRegistrationFormNicknameTooLongError = screen.getByTestId(
+      'player-registration-form-nickname-too-long-error',
+    );
+    expect(playerRegistrationFormNicknameTooLongError).toBeInstanceOf(HTMLElement);
+  });
 });
 
 async function registerPlayerWithNickname(nickname: string) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NicknameTooShortError } from '../../errors';
+import { NicknameTooLongError, NicknameTooShortError } from '../../errors';
 import { Nickname } from './nickname-value-object';
 
 describe(Nickname.name, () => {
@@ -23,5 +23,13 @@ describe(Nickname.name, () => {
     const nicknameValueObjectCreation = () => Nickname.create(nicknameValue);
 
     expect(nicknameValueObjectCreation).toThrow(new NicknameTooShortError());
+  });
+
+  it('fails to create nickname object if nickname value length is too long', () => {
+    const tooLongNicknameValue = 'nicknamenicknamenickname';
+
+    const nicknameValueObjectCreation = () => Nickname.create(tooLongNicknameValue);
+
+    expect(nicknameValueObjectCreation).toThrow(new NicknameTooLongError());
   });
 });
