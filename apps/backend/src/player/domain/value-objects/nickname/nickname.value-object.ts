@@ -28,4 +28,8 @@ export class Nickname {
 
     return new Nickname(value);
   }
+
+  equals(nickname: Nickname): boolean {
+    return this.value === nickname.value;
+  }
 }

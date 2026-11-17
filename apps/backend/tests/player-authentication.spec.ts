@@ -138,6 +138,24 @@ describe('Player authentication', () => {
     },
   );
 
+  it('returns 409 if player is registering with nickname already taken by another player', async () => {
+    await app.inject({
+      method: 'POST',
+      url: PLAYER_API_URL,
+      body: { nickname: 'nickname' },
+    });
+    const registerPlayer = await app.inject({
+      method: 'POST',
+      url: PLAYER_API_URL,
+      body: { nickname: 'nickname' },
+    });
+
+    expect(registerPlayer.statusCode).toStrictEqual(409);
+    expect(JSON.parse(registerPlayer.body)).toStrictEqual({
+      rejectionReason: 'NICKNAME_ALREADY_TAKEN',
+    });
+  });
+
   afterEach(async () => {
     await app.close();
   });

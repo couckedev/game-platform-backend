@@ -9,6 +9,10 @@ export class FastifyPlayerRegistrationView {
       this.httpResponse.status(201).send({});
       return;
     }
+    if (viewModel.reason === 'NICKNAME_ALREADY_TAKEN') {
+      this.httpResponse.status(409).send({ rejectionReason: viewModel.reason });
+      return;
+    }
     this.httpResponse.status(422).send({ rejectionReason: viewModel.reason });
     return;
   }
