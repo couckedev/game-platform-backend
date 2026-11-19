@@ -1,5 +1,9 @@
 import type { App as VueApp } from 'vue';
-import { AuthenticationToken } from '@/player/infrastructure/vuejs';
+import {
+  AuthenticationToken,
+  createPlayerModule,
+  PlayerModuleToken,
+} from '@/player/infrastructure/vuejs';
 import type { BootstrapAppDependencies } from './bootstrap-app-dependencies.interface';
 
 export function createAppPlugin(dependencies: BootstrapAppDependencies) {
@@ -7,6 +11,7 @@ export function createAppPlugin(dependencies: BootstrapAppDependencies) {
     install(app: VueApp) {
       app.use(dependencies.store);
       app.provide(AuthenticationToken, dependencies.authentication);
+      app.provide(PlayerModuleToken, createPlayerModule());
       app.use(dependencies.router);
     },
   };

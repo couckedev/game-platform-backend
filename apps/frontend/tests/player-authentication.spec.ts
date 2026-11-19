@@ -45,6 +45,7 @@ async function clickOnGoogleSignInButton() {
 
 async function fillAndSubmitRegistrationForm(nickname: string) {
   const nicknameInput = screen.getByTestId('registration-form-nickname-input');
+  await userEvent.clear(nicknameInput);
   await userEvent.type(nicknameInput, nickname);
   const registrationFormSubmitButton = screen.getByTestId('registration-form-submit-button');
   await userEvent.click(registrationFormSubmitButton);
@@ -97,5 +98,77 @@ describe('Player authentication', () => {
       'main-navigation-authenticated-player-nickname',
     );
     expect(nicknameOnMainNavigation.textContent).toStrictEqual('nickname123');
+  });
+
+  it.each([
+    { nickname: 'n' },
+    { nickname: 'ni' },
+    { nickname: 'nic' },
+    { nickname: 'nick' },
+    { nickname: 'nickn' },
+    { nickname: 'nickna' },
+    { nickname: 'nicknam' },
+  ])(
+    'shows error on registration form nickname input if nickname is less than 8 characters long',
+    async ({ nickname }) => {
+      await goToSignInPage();
+      await clickOnGoogleSignInButton();
+      authenticationServer.authenticate();
+      app = await openApp(authentication);
+
+      await fillAndSubmitRegistrationForm(nickname);
+
+      const errors = screen.queryAllByRole('error');
+      const nicknameTooShortError = errors.find(
+        (errorNode) => errorNode.getAttribute('data-error-code') === 'NICKNAME_TOO_SHORT',
+      );
+      expect(nicknameTooShortError).toBeInstanceOf(HTMLElement);
+    },
+  );
+
+  it('hides error on registration form nickname input if nickname is exactly 8 characters long', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    authenticationServer.authenticate();
+    app = await openApp(authentication);
+    await fillAndSubmitRegistrationForm('nick');
+
+    await fillAndSubmitRegistrationForm('nickname');
+
+    const errors = screen.queryAllByRole('error');
+    const nicknameTooShortError = errors.find(
+      (errorNode) => errorNode.getAttribute('data-error-code') === 'NICKNAME_TOO_SHORT',
+    );
+    expect(nicknameTooShortError).toBeUndefined();
+  });
+
+  it('shows error on registration form nickname input if nickname is more than 20 characters long', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    authenticationServer.authenticate();
+    app = await openApp(authentication);
+    await fillAndSubmitRegistrationForm('nicknamenicknamenicknamenickname');
+
+    const errors = screen.queryAllByRole('error');
+    const nicknameTooLongError = errors.find(
+      (errorNode) => errorNode.getAttribute('data-error-code') === 'NICKNAME_TOO_LONG',
+    );
+    expect(nicknameTooLongError).toBeInstanceOf(HTMLElement);
+  });
+
+  it('hides error on registration form nickname input if nickname is exactly 20 characters long', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    authenticationServer.authenticate();
+    app = await openApp(authentication);
+    await fillAndSubmitRegistrationForm('nicknamenicknamenicknamenickname');
+
+    await fillAndSubmitRegistrationForm('nicknamenicknamenick');
+
+    const errors = screen.queryAllByRole('error');
+    const nicknameTooLongError = errors.find(
+      (errorNode) => errorNode.getAttribute('data-error-code') === 'NICKNAME_TOO_LONG',
+    );
+    expect(nicknameTooLongError).toBeUndefined();
   });
 });

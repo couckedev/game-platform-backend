@@ -8,7 +8,10 @@ const onRegistrationFormSubmitted = (nickname: string) => playerStore.register(n
 </script>
 
 <template>
-  <PlayerRegistrationFormView @registration-form-submitted="onRegistrationFormSubmitted" />
+  <PlayerRegistrationFormView
+    @registration-form-submitted="onRegistrationFormSubmitted"
+    :registration-form-errors="playerStore.registrationFormErrors"
+  />
 </template>
 
 <style scoped></style>
