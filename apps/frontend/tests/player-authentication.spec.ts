@@ -239,4 +239,17 @@ describe('Player authentication', () => {
     );
     expect(nicknameTooFewAlphanumericError).toBeUndefined();
   });
+
+  it('show sign-in navigation link if user cancels registration', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    authenticationServer.authenticate();
+    app = await openApp(authentication);
+    await fillAndSubmitRegistrationForm('nickname123');
+    const cancelRegistrationButton = screen.getByTestId('player-registration-form-cancel-button');
+
+    await userEvent.click(cancelRegistrationButton);
+
+    screen.debug();
+  });
 });

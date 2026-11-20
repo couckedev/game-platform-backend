@@ -27,6 +27,13 @@ const emits = defineEmits<PlayerRegistrationFormViewEmits>();
       :data-error-code="error.code"
       >{{ error.label }}</span
     >
+    <button
+      type="button"
+      data-testid="registration-form-cancel-button"
+      @click="emits('registrationCanceled')"
+    >
+      Cancel
+    </button>
     <button type="submit" data-testid="registration-form-submit-button">Register an account</button>
   </form>
 </template>
