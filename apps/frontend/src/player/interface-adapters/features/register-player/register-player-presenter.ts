@@ -10,6 +10,7 @@ export class RegisterPlayerPresenter implements RegisterPlayerOutputPort {
   private readonly nicknameErrorMapping = new Map<string, string>([
     ['NICKNAME_TOO_SHORT', 'Nickname is too short'],
     ['NICKNAME_TOO_LONG', 'Nickname is too long'],
+    ['NICKNAME_FORBIDDEN_CHARACTERS', 'Nickname contains forbidden characters'],
   ]);
 
   present(outputData: RegisterPlayerOutputData): void {

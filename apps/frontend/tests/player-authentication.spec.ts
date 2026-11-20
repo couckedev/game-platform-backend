@@ -171,4 +171,41 @@ describe('Player authentication', () => {
     );
     expect(nicknameTooLongError).toBeUndefined();
   });
+
+  it.each([
+    { nickname: 'n!ckname', reason: 'contains ! character' },
+    { nickname: 'n,ckname', reason: 'contains , character' },
+    { nickname: 'nickname123$', reason: 'contains $ character' },
+  ])(
+    'shows error on registration form nickname input if nickname contains forbidden characters ($reason)',
+    async ({ nickname }) => {
+      await goToSignInPage();
+      await clickOnGoogleSignInButton();
+      authenticationServer.authenticate();
+      app = await openApp(authentication);
+      await fillAndSubmitRegistrationForm(nickname);
+
+      const errors = screen.queryAllByRole('error');
+      const nicknameForbiddenCharactersError = errors.find(
+        (errorNode) =>
+          errorNode.getAttribute('data-error-code') === 'NICKNAME_FORBIDDEN_CHARACTERS',
+      );
+      expect(nicknameForbiddenCharactersError).toBeInstanceOf(HTMLElement);
+    },
+  );
+  it('hides error on registration form nickname input if nickname does not contain forbidden character', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    authenticationServer.authenticate();
+    app = await openApp(authentication);
+    await fillAndSubmitRegistrationForm('n!ckname');
+
+    await fillAndSubmitRegistrationForm('nickname123');
+
+    const errors = screen.queryAllByRole('error');
+    const nicknameForbiddenCharactersError = errors.find(
+      (errorNode) => errorNode.getAttribute('data-error-code') === 'NICKNAME_FORBIDDEN_CHARACTERS',
+    );
+    expect(nicknameForbiddenCharactersError).toBeUndefined();
+  });
 });
