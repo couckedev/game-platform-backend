@@ -2,11 +2,12 @@ import type { NicknameCreationRejectionReason } from '@/player/domain/value-obje
 
 export type RegisterPlayerOutputData =
   | {
-      status: 'FAILURE';
       errors: {
         nickname: NicknameCreationRejectionReason[];
       };
     }
   | {
-      status: 'SUCCESS';
+      player: {
+        nickname: string;
+      };
     };

@@ -2,5 +2,5 @@ import type { NicknameCreationRejectionReason } from './nickname-creation-reject
 import type { NicknameValueObject } from './nickname-value-object';
 
 export type NicknameCreationResult =
-  | { status: 'FAILURE'; errors: NicknameCreationRejectionReason[] }
-  | { status: 'SUCCESS'; value: NicknameValueObject };
+  | { errors: NicknameCreationRejectionReason[] }
+  | { nickname: NicknameValueObject };

@@ -1,8 +1,9 @@
 import { provideRegisterPlayerFeature } from '@/player/infrastructure/vuejs';
 import type { PlayerModule } from './player-module.interface';
+import type { PlayerModuleDependencies } from './player-module-dependencies.interface';
 
-export function createPlayerModule(): PlayerModule {
+export function createPlayerModule(dependencies: PlayerModuleDependencies): PlayerModule {
   return {
-    registerPlayer: provideRegisterPlayerFeature(),
+    registerPlayer: provideRegisterPlayerFeature({ translator: dependencies.translator }),
   };
 }

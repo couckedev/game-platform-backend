@@ -7,9 +7,8 @@ export class RegisterPlayerUseCase {
 
   execute(inputData: RegisterPlayerInputData): void {
     const nicknameCreationResult = NicknameValueObject.create(inputData.nickname);
-    if (nicknameCreationResult.status === 'FAILURE') {
+    if ('errors' in nicknameCreationResult) {
       this.outputPort.present({
-        status: 'FAILURE',
         errors: {
           nickname: nicknameCreationResult.errors,
         },
@@ -18,7 +17,9 @@ export class RegisterPlayerUseCase {
     }
 
     this.outputPort.present({
-      status: 'SUCCESS',
+      player: {
+        nickname: nicknameCreationResult.nickname.value,
+      },
     });
   }
 }

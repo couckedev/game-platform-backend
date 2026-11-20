@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, inject, ref } from 'vue';
-import type { Authentication, Provider } from '@/player/infrastructure/authentication/common';
+import type { Authentication } from '@/player/infrastructure/authentication/common';
 import {
   AuthenticationToken,
   type PlayerModule,
@@ -33,7 +33,7 @@ export const usePlayerStore = defineStore('player', () => {
   });
   const authenticatedPlayer = ref<AuthenticatedPlayer | null>(null);
 
-  const signInWith = async (provider: Provider) => {
+  const signInWith = async () => {
     await authentication.startSignInProcess();
     return;
   };
@@ -48,12 +48,12 @@ export const usePlayerStore = defineStore('player', () => {
     const viewModel = playerModule.registerPlayer({
       nickname,
     });
-    if (viewModel.status === 'FAILURE') {
-      registrationFormErrors.value = viewModel.errors;
-      return;
+    if (viewModel.player) {
+      hasSignedIn.value = true;
+      authenticatedPlayer.value = { nickname: viewModel.player.nickname };
     }
-    hasSignedIn.value = true;
-    authenticatedPlayer.value = { nickname };
+    registrationFormErrors.value = viewModel.errors;
+    return;
   };
 
   return {
