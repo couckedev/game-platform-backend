@@ -3,4 +3,5 @@ import type { AuthenticationStatusResolver } from './authentication-status-resol
 export interface AuthenticationFactoryDependencies {
   authenticationStatusResolver: AuthenticationStatusResolver;
   onSignInStarted(): Promise<void>;
+  onSignOutStarted(): Promise<void>;
 }

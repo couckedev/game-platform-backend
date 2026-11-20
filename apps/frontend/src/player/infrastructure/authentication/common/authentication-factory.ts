@@ -6,6 +6,7 @@ export function createAuthentication(
 ): Authentication {
   return {
     startSignInProcess: dependencies.onSignInStarted,
+    startSignOutProcess: dependencies.onSignOutStarted,
     async restore() {
       await dependencies.authenticationStatusResolver.resolve();
       this.isAuthenticated = dependencies.authenticationStatusResolver.isAuthenticated;

@@ -65,7 +65,12 @@ describe('Player authentication', () => {
       authenticationStatusResolver: new InMemoryAuthenticationStatusResolver(authenticationServer),
       onSignInStarted: async () => {
         app.unmount();
-        authenticationServer.authenticate();
+        authenticationServer.signIn();
+        app = await openApp(authentication);
+      },
+      onSignOutStarted: async () => {
+        app.unmount();
+        authenticationServer.signOut();
         app = await openApp(authentication);
       },
     });
@@ -241,5 +246,16 @@ describe('Player authentication', () => {
       (errorNode) => errorNode.getAttribute('data-error-code') === 'NICKNAME_TOO_FEW_ALPHANUMERIC',
     );
     expect(nicknameTooFewAlphanumericError).toBeUndefined();
+  });
+
+  it('show sign-in navigation link if user cancels registration', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    await fillAndSubmitRegistrationForm('nickname123');
+    const cancelRegistrationButton = screen.getByTestId('registration-form-cancel-button');
+
+    await userEvent.click(cancelRegistrationButton);
+
+    expect(screen.getByTestId('main-navigation')).toBeInstanceOf(HTMLElement);
   });
 });

@@ -56,10 +56,16 @@ export const usePlayerStore = defineStore('player', () => {
     return;
   };
 
+  const cancelRegistration = async () => {
+    await authentication.startSignOutProcess();
+    return;
+  };
+
   return {
     signInWith,
     restoreIdentity,
     register,
+    cancelRegistration,
     hasSignedIn,
     isRegistering,
     authenticatedPlayer,

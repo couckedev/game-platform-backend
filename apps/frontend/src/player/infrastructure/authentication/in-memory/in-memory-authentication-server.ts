@@ -1,7 +1,11 @@
 export class InMemoryAuthenticationServer {
   public isAuthenticated = false;
 
-  authenticate() {
+  signIn() {
     this.isAuthenticated = true;
+  }
+
+  signOut() {
+    this.isAuthenticated = false;
   }
 }
