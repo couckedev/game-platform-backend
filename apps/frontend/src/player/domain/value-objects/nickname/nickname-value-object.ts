@@ -17,9 +17,14 @@ export class NicknameValueObject {
     if (value.length > NicknameValueObject.MAXIMUM_LENGTH) {
       errors.push('NICKNAME_TOO_LONG');
     }
-
     if (NicknameValueObject.FORBIDDEN_CHARACTERS.test(value)) {
       errors.push('NICKNAME_FORBIDDEN_CHARACTERS');
+    }
+
+    const alphanumericRegex = /[A-Za-z0-9]/g;
+
+    if ([...value.matchAll(alphanumericRegex)].length < 3) {
+      errors.push('NICKNAME_TOO_FEW_ALPHANUMERIC');
     }
     if (errors.length > 0) {
       return { status: 'FAILURE', errors };

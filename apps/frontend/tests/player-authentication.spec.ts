@@ -193,6 +193,7 @@ describe('Player authentication', () => {
       expect(nicknameForbiddenCharactersError).toBeInstanceOf(HTMLElement);
     },
   );
+
   it('hides error on registration form nickname input if nickname does not contain forbidden character', async () => {
     await goToSignInPage();
     await clickOnGoogleSignInButton();
@@ -207,5 +208,35 @@ describe('Player authentication', () => {
       (errorNode) => errorNode.getAttribute('data-error-code') === 'NICKNAME_FORBIDDEN_CHARACTERS',
     );
     expect(nicknameForbiddenCharactersError).toBeUndefined();
+  });
+
+  it('shows error on registration form nickname input if nickname contains less than 3 alphanumeric characters', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    authenticationServer.authenticate();
+    app = await openApp(authentication);
+    await fillAndSubmitRegistrationForm('-_-_-_-ab');
+
+    const errors = screen.queryAllByRole('error');
+    const nicknameTooFewAlphanumericError = errors.find(
+      (errorNode) => errorNode.getAttribute('data-error-code') === 'NICKNAME_TOO_FEW_ALPHANUMERIC',
+    );
+    expect(nicknameTooFewAlphanumericError).toBeInstanceOf(HTMLElement);
+  });
+
+  it('hides error on registration form nickname input if nickname contains at least alphanumeric characters', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    authenticationServer.authenticate();
+    app = await openApp(authentication);
+    await fillAndSubmitRegistrationForm('_-_--_-_');
+
+    await fillAndSubmitRegistrationForm('nickname123');
+
+    const errors = screen.queryAllByRole('error');
+    const nicknameTooFewAlphanumericError = errors.find(
+      (errorNode) => errorNode.getAttribute('data-error-code') === 'NICKNAME_TOO_FEW_ALPHANUMERIC',
+    );
+    expect(nicknameTooFewAlphanumericError).toBeUndefined();
   });
 });

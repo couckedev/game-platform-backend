@@ -11,6 +11,7 @@ export class RegisterPlayerPresenter implements RegisterPlayerOutputPort {
     ['NICKNAME_TOO_SHORT', 'Nickname is too short'],
     ['NICKNAME_TOO_LONG', 'Nickname is too long'],
     ['NICKNAME_FORBIDDEN_CHARACTERS', 'Nickname contains forbidden characters'],
+    ['NICKNAME_TOO_FEW_ALPHANUMERIC', 'Nickname contains too few alphanumeric characters'],
   ]);
 
   present(outputData: RegisterPlayerOutputData): void {
