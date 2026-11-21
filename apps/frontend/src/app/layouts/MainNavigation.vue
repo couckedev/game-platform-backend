@@ -5,7 +5,7 @@ const playerStore = usePlayerStore();
 </script>
 
 <template>
-  <nav aria-label="Main navigation">
+  <nav aria-label="Main navigation" v-if="!playerStore.hasSignedIn">
     <router-link :to="{ name: 'sign-in' }">Sign in</router-link>
   </nav>
 </template>

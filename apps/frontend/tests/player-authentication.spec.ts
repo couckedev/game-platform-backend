@@ -71,7 +71,7 @@ describe('Player authentication', () => {
     expect(window.location.pathname).toBe('/sign-in');
   });
 
-  it('shows registration form if unregistered user has signed in with google', async () => {
+  it('shows registration form if unregistered user has signed in', async () => {
     await goToSignInPage();
 
     await clickOnGoogleSignInButton();
@@ -87,5 +87,12 @@ describe('Player authentication', () => {
     await clickOnGoogleSignInButton();
 
     expect(() => screen.getByRole('button', { name: 'Sign in with Google' })).toThrow();
+  });
+  it('hides main navigation if unregistered user has signed in', async () => {
+    await goToSignInPage();
+
+    await clickOnGoogleSignInButton();
+
+    expect(() => screen.getByRole('navigation', { name: 'Main navigation' })).toThrow();
   });
 });
