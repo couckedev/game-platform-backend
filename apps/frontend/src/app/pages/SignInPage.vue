@@ -10,7 +10,7 @@ const playerStore = usePlayerStore();
 
 <template>
   <PlayerRegistrationForm v-if="playerStore.hasSignedIn" />
-  <SignInButton provider="google" />
+  <SignInButton v-if="!playerStore.hasSignedIn" provider="google" />
 </template>
 
 <style scoped></style>

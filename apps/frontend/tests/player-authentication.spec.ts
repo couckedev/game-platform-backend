@@ -80,4 +80,12 @@ describe('Player authentication', () => {
       HTMLElement,
     );
   });
+
+  it('hides sign-in button if unregistered user has signed in', async () => {
+    await goToSignInPage();
+
+    await clickOnGoogleSignInButton();
+
+    expect(() => screen.getByRole('button', { name: 'Sign in with Google' })).toThrow();
+  });
 });
