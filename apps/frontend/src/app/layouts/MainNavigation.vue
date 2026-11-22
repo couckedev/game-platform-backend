@@ -10,6 +10,8 @@ const playerStore = usePlayerStore();
     <a href="#" v-if="playerStore.hasSignedIn && playerStore.authenticatedPlayer !== null">
       {{ playerStore.authenticatedPlayer.nickname }}
     </a>
+
+    <span data-testid="sign-out-navigation-link" @click="playerStore.signOut">Sign out</span>
   </nav>
 </template>
 

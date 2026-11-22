@@ -224,7 +224,6 @@ describe('Player authentication', () => {
   it('shows error on registration form nickname input if nickname contains less than 3 alphanumeric characters', async () => {
     await goToSignInPage();
     await clickOnGoogleSignInButton();
-
     await fillAndSubmitRegistrationForm('-_-_-_-ab');
 
     const errors = screen.queryAllByRole('error');
@@ -257,5 +256,17 @@ describe('Player authentication', () => {
     await userEvent.click(cancelRegistrationButton);
 
     expect(screen.getByTestId('main-navigation')).toBeInstanceOf(HTMLElement);
+  });
+
+  it('show sign-in navigation link if registered signed-in user signs out', async () => {
+    await goToSignInPage();
+    await clickOnGoogleSignInButton();
+    await fillAndSubmitRegistrationForm('nickname123');
+    const signOutNavigationlink = screen.getByTestId('sign-out-navigation-link');
+
+    await userEvent.click(signOutNavigationlink);
+
+    const signInNavigationlink = screen.getByTestId('sign-in-navigation-link');
+    expect(signInNavigationlink).toBeInstanceOf(HTMLElement);
   });
 });
