@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { render, screen, within } from '@testing-library/vue';
-import { createPinia } from 'pinia';
 import { beforeAll, describe, it } from 'vitest';
+import { createAppPlugin } from '../src/app/bootstrap/bootstrap-app-plugin';
 import App from '../src/app/components/App.vue';
 import router from '../src/app/router/index.ts';
 
@@ -9,8 +9,7 @@ describe('Player authentication', () => {
   beforeAll(() => {
     render(App, {
       global: {
-        plugins: [createPinia(), router],
-        provide: {},
+        plugins: [createAppPlugin({ router })],
       },
     });
   });
